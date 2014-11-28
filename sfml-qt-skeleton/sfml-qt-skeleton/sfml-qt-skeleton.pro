@@ -5,7 +5,7 @@
 #-------------------------------------------------
 
 QT       += core gui
-QT       += x11extras
+#QT       += x11extras
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 

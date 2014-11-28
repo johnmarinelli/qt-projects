@@ -20,9 +20,6 @@ QSFMLCanvas::QSFMLCanvas(QWidget *parent, const QPoint &position, const QSize &s
     #include <X11/Xlib.h>
 #endif
 
-#include <QtX11Extras/qx11info_x11.h>
-#include <X11/Xlib.h>
-
 void QSFMLCanvas::showEvent(QShowEvent* e)
 {
     if(!mInitialized)
