@@ -7,6 +7,7 @@
 #include <QString>
 
 #include <iostream>
+#include <string>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -18,11 +19,43 @@ MainWindow::MainWindow(QWidget *parent) :
     mSFMLView = new MyCanvas(mSFMLFrame, QPoint(0,0),
                              QSize(mSFMLFrame->geometry().width(),mSFMLFrame->geometry().height()));
 
-    mSignalMapper = new QSignalMapper(this);
+    QPixmap tileSheet(":/tiles/assets/tiles.png");
+
+    int cols = std::floor(tileSheet.width() / mTileWidth);
+    int rows = std::floor(tileSheet.height() / mTileHeight);
+
+    int radioButtonX = mSFMLFrame->geometry().left() + mSFMLFrame->geometry().width() + 10;
+    int radioButtonY = 75;
+    int radioButtonYIncrement = 25;
+
+    for(int i = 0; i < rows; ++i) {
+        for(int j = 0; j < cols; ++j) {
+            int xOffset = (j*mTileWidth)+j;
+            int yOffset = (i*mTileHeight)+i;
+
+            qDebug(std::to_string(xOffset).c_str());
+
+            QPixmap tile = tileSheet.copy(xOffset, yOffset, mTileWidth, mTileHeight);
+
+            JRadioButton* jrb = new JRadioButton("", this);
+
+            jrb->setIcon(QIcon(tile));
+
+            int radioButtonWidth = tile.rect().width() + jrb->geometry().width();
+            int radioButtonHeight = jrb->geometry().height();
+
+            jrb->setGeometry(radioButtonX, radioButtonY, radioButtonWidth, radioButtonHeight);
+
+            mRadioButtons.push_back(jrb);
+            radioButtonY += radioButtonYIncrement;
+        }
+    }
 
     /*
      * for each tile in tiles, create a radio button
-     */
+
+    mSignalMapper = new QSignalMapper(this);
+
     int radioButtonX = mSFMLFrame->geometry().left() + mSFMLFrame->geometry().width() + 10;
     int radioButtonY = 75;
     int radioButtonYIncrement = 100;
@@ -49,6 +82,8 @@ MainWindow::MainWindow(QWidget *parent) :
     }
 
     connect(mSignalMapper, SIGNAL(mapped(QString)), mSFMLView, SLOT(setCurrentTileName(QString)));
+    */
+
 }
 
 MainWindow::~MainWindow()

@@ -32,7 +32,11 @@ private:
 
     QFrame* mSFMLFrame;
     MyCanvas* mSFMLView;
+
     std::vector<JRadioButton*> mRadioButtons;
+
+    const int mTileWidth = 32;
+    const int mTileHeight = 32;
 };
 
 #endif // MAINWINDOW_H
