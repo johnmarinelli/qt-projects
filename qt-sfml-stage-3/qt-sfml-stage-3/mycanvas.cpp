@@ -1,22 +1,25 @@
 #include "mycanvas.h"
+#include "utility.h"
 #include <iostream>
 #include <sstream>
 
 MyCanvas::MyCanvas(QWidget *parent, const QPoint& position, const QSize& size, sf::Texture& tilesheet) :
     QSFMLCanvas(parent, position, size),
-    mTilesheet(tilesheet)
+    mTilesheet(tilesheet),
+    mSize(size)
 {
 }
 
 void MyCanvas::onInit()
 {
-    mSprite.setTexture(mTilesheet);
 }
 
 void MyCanvas::onUpdate()
 {
     sf::RenderWindow::clear(sf::Color(255, 255, 255));
-    draw(mSprite);
+    for(auto sprite : mSprites) {
+        draw(sprite);
+    }
 }
 
 void MyCanvas::setCurrentTileName(QString name)
@@ -49,20 +52,16 @@ void MyCanvas::mousePressEvent(QMouseEvent* event)
 
         std::string s = "x: " + sX.str() + " y: " + sY.str();
 
-        /*
-         * load corresponding image into mSprite
+        sf::Sprite sprite;
 
-        std::string imgPath = "../qt-sfml-stage-2/assets/" + mCurrentTileName;
+        sprite.setTexture(mTilesheet);
+        sprite.setTextureRect(mCurrentTileBounds);
 
-        mTexture.loadFromFile(imgPath);*/
-        mSprite.setTexture(mTilesheet);
-        mSprite.setTextureRect(mCurrentTileBounds);
+        x = getNearestMultiple(x, TILE_WIDTH);
+        y = getNearestMultiple(y, TILE_HEIGHT);
 
-        //qDebug(std::to_string(mCurrentTileBounds.left).c_str());
-        //qDebug(std::to_string(mCurrentTileBounds.top).c_str());
+        sprite.setPosition(x, y);
 
-        //qDebug(s.c_str());
-
-        mSprite.setPosition(x, y);
+        mSprites.push_back(sprite);
     }
 }

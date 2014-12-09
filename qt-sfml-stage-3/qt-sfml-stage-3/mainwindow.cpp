@@ -32,7 +32,6 @@ MainWindow::MainWindow(QWidget *parent) :
 
     int radioButtonX = mSFMLFrame->geometry().left() + mSFMLFrame->geometry().width() + 10;
     int radioButtonY = 75;
-    int radioButtonYIncrement = 25;
 
     for(int i = 0; i < rows; ++i) {
         for(int j = 0; j < cols; ++j) {

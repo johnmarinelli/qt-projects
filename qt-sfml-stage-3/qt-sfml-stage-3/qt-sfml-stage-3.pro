@@ -26,7 +26,8 @@ HEADERS  += mainwindow.h \
     qsfmlcanvas.h \
     mycanvas.h \
     jradiobutton.h \
-    qsfmlrect.h
+    qsfmlrect.h \
+    utility.h
 
 FORMS    += mainwindow.ui
 

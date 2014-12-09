@@ -14,11 +14,14 @@ private:
 
     sf::Texture mTexture;
     sf::Texture mTilesheet;
+    std::vector<sf::Sprite> mSprites;
     sf::Sprite mSprite;
 
     std::string mCurrentTileName;
 
     sf::Rect<int> mCurrentTileBounds;
+
+    QSize mSize;
 
 public:
     MyCanvas(QWidget *parent, const QPoint& position, const QSize& size, sf::Texture& tilesheet);
