@@ -11,7 +11,7 @@
 #include <QString>
 
 #include <iostream>
-#include <string>
+#include <sstream>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -19,80 +19,34 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
     this->setGeometry(0, 0, mWindowWidth, mWindowHeight);
-    setGUI();
-    mSFMLFrame = ui->SFMLFrame;
+    //setGUI();
+    resizeTileSelect();
+    resizeSFMLFrame();
 
     mTilesheet.loadFromFile("tiles.png");
-    QPixmap tileSheet(":/tiles/assets/tiles.png");
 
+    mSFMLFrame = ui->SFMLFrame;
     mSFMLView = new MyCanvas(mSFMLFrame, QPoint(0,0),
-                             QSize(mSFMLFrame->geometry().width(),mSFMLFrame->geometry().height()),
+                             QSize(mSFMLFrame->geometry().width(), mSFMLFrame->geometry().height()),
                              mTilesheet);
-
-    mSignalMapper = new QSignalMapper(this);
-
-    //int radioButtonX = mSFMLFrame->geometry().left() + mSFMLFrame->geometry().width() + 10;
-    //int radioButtonY = 75;
-
-    /*
-    for(int i = 0; i < rows; ++i) {
-        for(int j = 0; j < cols; ++j) {
-            int xOffset = (j*mTileWidth)+j;
-            int yOffset = (i*mTileHeight)+i;
-
-            QPixmap tile = tileSheet.copy(xOffset, yOffset, mTileWidth, mTileHeight);
-
-            JRadioButton* jrb = new JRadioButton("", mTilesheet, this);
-
-            jrb->setIcon(QIcon(tile));
-            jrb->setClipBounds(yOffset, xOffset, mTileWidth, mTileHeight);
-
-            int radioButtonWidth = tile.rect().width()*2;
-            int radioButtonHeight = jrb->geometry().height();
-
-            jrb->setGeometry(radioButtonX, radioButtonY, radioButtonWidth, radioButtonHeight);
-
-            connect(jrb, SIGNAL(clicked()), mSignalMapper, SLOT(map()));
-
-            sf::Rect<int> subRect = jrb->getClipBounds();
-            QObject* a = new QObject();
-            QRect rect;
-            rect.setTop(subRect.top);
-            rect.setLeft(subRect.left);
-            rect.setWidth(subRect.width);
-            rect.setHeight(subRect.height);
-
-            mObjects.push_back(a);
-
-            a->setProperty("bounds", QVariant(rect));
-
-            mSignalMapper->setMapping(jrb, mObjects.back());
-
-            mRadioButtons.push_back(jrb);
-
-            if(radioButtonY + radioButtonHeight >= this->geometry().height() - (radioButtonHeight*2) ) {
-                radioButtonY = 75;
-                radioButtonX += 75;
-            }
-            else {
-                radioButtonY += radioButtonHeight;
-            }
-        }
-    }*/
-
-    //connect(mSignalMapper, SIGNAL(mapped(QObject*)), mSFMLView, SLOT(setCurrentTileBounds(QObject*)));
+    setTileSelectLayout();
 }
 
 void MainWindow::setGUI()
 {
     /* left to right */
+    resizeTileSelect();
     setTileSelectLayout();
     resizeSFMLFrame();
 }
 
-void MainWindow::setTileSelectLayout()
+void MainWindow::resizeTileSelect()
 {
     ui->scrollArea->setGeometry(0, 0, mWindowWidth / 3, mWindowHeight);
+}
+
+void MainWindow::setTileSelectLayout()
+{
     QPixmap tileSheet(":/tiles/assets/tiles.png");
     int tileSheetCols = std::floor(tileSheet.width() / mTileWidth);
     int tileSheetRows = std::floor(tileSheet.height() / mTileHeight);
@@ -104,6 +58,8 @@ void MainWindow::setTileSelectLayout()
     int gridCols = std::floor(ui->scrollArea->geometry().width() / mTileWidth);
     int gridRows = std::floor(ui->scrollArea->geometry().height() / mTileHeight);
 
+    mSignalMapper = new QSignalMapper(this);
+
     for(int i = 0; i < tileSheetRows; ++i) {
         for(int j = 0; j < tileSheetCols; ++j) {
             int xOffset = (j*mTileWidth)+j;
@@ -113,7 +69,22 @@ void MainWindow::setTileSelectLayout()
             QPixmap tile = tileSheet.copy(xOffset, yOffset, mTileWidth, mTileHeight);
 
             /* create new push button */
-            QPushButton* button = new QPushButton(this);
+            JPushButton* button = new JPushButton(this);
+
+            button->setClipBounds(yOffset, xOffset, mTileWidth, mTileHeight);
+            connect(button, SIGNAL(clicked()), mSignalMapper, SLOT(map()));
+
+            sf::Rect<int> subRect = button->getClipBounds();
+            QObject* package = new QObject();
+            QRect rect;
+            rect.setTop(subRect.top);
+            rect.setLeft(subRect.left);
+            rect.setWidth(subRect.width);
+            rect.setHeight(subRect.height);
+            package->setProperty("bounds", QVariant(rect));
+
+            mObjects.push_back(package);
+            mSignalMapper->setMapping(button, mObjects.back());
 
             /* set button's icon */
             button->setIcon(QIcon(tile));
@@ -124,6 +95,8 @@ void MainWindow::setTileSelectLayout()
             layout->addWidget(button, row, col, Qt::AlignCenter);
         }
     }
+
+    connect(mSignalMapper, SIGNAL(mapped(QObject*)), mSFMLView, SLOT(setCurrentTileBounds(QObject*)));
 }
 
 void MainWindow::resizeSFMLFrame()

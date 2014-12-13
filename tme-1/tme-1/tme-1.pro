@@ -20,14 +20,16 @@ SOURCES += main.cpp\
     qsfmlcanvas.cpp \
     mycanvas.cpp \
     jradiobutton.cpp \
-    qsfmlrect.cpp
+    qsfmlrect.cpp \
+    jpushbutton.cpp
 
 HEADERS  += mainwindow.h \
     qsfmlcanvas.h \
     mycanvas.h \
     jradiobutton.h \
     qsfmlrect.h \
-    utility.h
+    utility.h \
+    jpushbutton.h
 
 FORMS    += \
     mainwindow.ui

@@ -45,12 +45,12 @@ void MyCanvas::mousePressEvent(QMouseEvent* event)
         int x = event->pos().x();
         int y = event->pos().y();
 
-        std::stringstream sX;
+        /*std::stringstream sX;
         sX << x;
         std::stringstream sY;
         sY << y;
 
-        std::string s = "x: " + sX.str() + " y: " + sY.str();
+        std::string s = "x: " + sX.str() + " y: " + sY.str();*/
 
         sf::Sprite sprite;
 

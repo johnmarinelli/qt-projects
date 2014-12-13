@@ -3,6 +3,7 @@
 
 #include "mycanvas.h"
 #include "jradiobutton.h"
+#include "jpushbutton.h"
 
 #include <QMainWindow>
 #include <QRadioButton>
@@ -24,6 +25,7 @@ public:
 
     void setGUI();
     void setTileSelectLayout();
+    void resizeTileSelect();
     void resizeSFMLFrame();
 
     ~MainWindow();
@@ -43,11 +45,13 @@ private:
     std::vector<JRadioButton*> mRadioButtons;
     std::vector<QObject*> mObjects;
 
+    std::vector<JPushButton*> mPushButtons;
+
     const int mTileWidth = 32;
     const int mTileHeight = 32;
 
-    const int mWindowWidth = 1000;
-    const int mWindowHeight = 1000;
+    const int mWindowWidth = 700;
+    const int mWindowHeight = 700;
 };
 
 #endif // MAINWINDOW_H
