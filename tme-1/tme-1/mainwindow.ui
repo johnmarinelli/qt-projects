@@ -63,6 +63,12 @@
      <height>20</height>
     </rect>
    </property>
+   <widget class="QMenu" name="menuTilemap_Editor_1">
+    <property name="title">
+     <string>Tilemap Editor 0.1</string>
+    </property>
+   </widget>
+   <addaction name="menuTilemap_Editor_1"/>
   </widget>
  </widget>
  <layoutdefault spacing="6" margin="11"/>

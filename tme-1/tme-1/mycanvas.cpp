@@ -64,4 +64,13 @@ void MyCanvas::mousePressEvent(QMouseEvent* event)
 
         mSprites.push_back(sprite);
     }
+
+    else if(event->button() & Qt::RightButton) {
+        int x = event->pos().x();
+        int y = event->pos().y();
+
+        x = getNearestMultiple(x, TILE_WIDTH);
+        y = getNearestMultiple(y, TILE_HEIGHT);
+
+    }
 }
