@@ -2,7 +2,6 @@
 #define MAINWINDOW_H
 
 #include "mycanvas.h"
-#include "jradiobutton.h"
 #include "jpushbutton.h"
 
 #include <QMainWindow>
@@ -23,7 +22,6 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = 0);
 
-    void setGUI();
     void setTileSelectLayout();
     void resizeTileSelect();
     void resizeSFMLFrame();
@@ -42,7 +40,6 @@ private:
     MyCanvas* mSFMLView;
     sf::Texture mTilesheet;
 
-    std::vector<JRadioButton*> mRadioButtons;
     std::vector<QObject*> mObjects;
 
     std::vector<JPushButton*> mPushButtons;

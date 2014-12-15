@@ -1,6 +1,5 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "jradiobutton.h"
 #include "qsfmlrect.h"
 
 #include <QMessageBox>
@@ -19,7 +18,6 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
     this->setGeometry(0, 0, mWindowWidth, mWindowHeight);
-    //setGUI();
     resizeTileSelect();
     resizeSFMLFrame();
 
@@ -30,14 +28,6 @@ MainWindow::MainWindow(QWidget *parent) :
                              QSize(mSFMLFrame->geometry().width(), mSFMLFrame->geometry().height()),
                              mTilesheet);
     setTileSelectLayout();
-}
-
-void MainWindow::setGUI()
-{
-    /* left to right */
-    resizeTileSelect();
-    setTileSelectLayout();
-    resizeSFMLFrame();
 }
 
 void MainWindow::resizeTileSelect()

@@ -29,7 +29,8 @@ HEADERS  += mainwindow.h \
     jradiobutton.h \
     qsfmlrect.h \
     utility.h \
-    jpushbutton.h
+    jpushbutton.h \
+    Vector2d.h
 
 FORMS    += \
     mainwindow.ui

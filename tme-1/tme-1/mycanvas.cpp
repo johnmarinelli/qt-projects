@@ -17,21 +17,14 @@ void MyCanvas::onInit()
 void MyCanvas::onUpdate()
 {
     sf::RenderWindow::clear(sf::Color(255, 255, 255));
-    for(auto sprite : mSprites) {
-        draw(sprite);
+    for(const auto& tile : mTiles) {
+        draw(tile.second);
     }
-}
-
-void MyCanvas::setCurrentTileName(QString name)
-{
-    mCurrentTileName = name.toUtf8().constData();
 }
 
 void MyCanvas::setCurrentTileBounds(QObject* bounds)
 {
     QRect r = bounds->property("bounds").toRect();
-
-    qDebug(std::to_string(r.left()).c_str());
 
     mCurrentTileBounds.left = r.left();
     mCurrentTileBounds.top = r.top();
@@ -41,36 +34,33 @@ void MyCanvas::setCurrentTileBounds(QObject* bounds)
 
 void MyCanvas::mousePressEvent(QMouseEvent* event)
 {
+    int x = event->pos().x();
+    int y = event->pos().y();
+
+    x = getNearestMultiple(x, TILE_WIDTH);
+    y = getNearestMultiple(y, TILE_HEIGHT);
+
+    sf::Vector2i coords(x, y);
+
     if(event->button() & Qt::LeftButton) {
-        int x = event->pos().x();
-        int y = event->pos().y();
-
-        /*std::stringstream sX;
-        sX << x;
-        std::stringstream sY;
-        sY << y;
-
-        std::string s = "x: " + sX.str() + " y: " + sY.str();*/
-
+        /* place tile at snapped point */
         sf::Sprite sprite;
 
         sprite.setTexture(mTilesheet);
         sprite.setTextureRect(mCurrentTileBounds);
 
-        x = getNearestMultiple(x, TILE_WIDTH);
-        y = getNearestMultiple(y, TILE_HEIGHT);
-
         sprite.setPosition(x, y);
+        mTiles[coords] = sprite;
 
-        mSprites.push_back(sprite);
+        std::cout << mTiles.size() << std::endl;
     }
 
     else if(event->button() & Qt::RightButton) {
-        int x = event->pos().x();
-        int y = event->pos().y();
+        /* find & delete tile */
+        auto tile = mTiles.find(coords);
 
-        x = getNearestMultiple(x, TILE_WIDTH);
-        y = getNearestMultiple(y, TILE_HEIGHT);
-
+        if(tile != mTiles.end()) {
+            mTiles.erase(tile);
+        }
     }
 }
