@@ -14,10 +14,12 @@
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
+    mQTTileSheet(":/tiles/assets/tiles.png"),
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
     this->setGeometry(0, 0, mWindowWidth, mWindowHeight);
+    resizeCurrentTileFrame();
     resizeTileSelect();
     resizeSFMLFrame();
 
@@ -28,18 +30,32 @@ MainWindow::MainWindow(QWidget *parent) :
                              QSize(mSFMLFrame->geometry().width(), mSFMLFrame->geometry().height()),
                              mTilesheet);
     setTileSelectLayout();
+
+    connect(mSFMLView, SIGNAL(clicked(const Tile&)), this, SLOT(sendTileInformation(const Tile&)));
 }
 
-void MainWindow::resizeTileSelect()
+void MainWindow::sendTileInformation(const Tile& tile)
 {
-    ui->scrollArea->setGeometry(0, 0, mWindowWidth / 3, mWindowHeight);
+    int xOffset = tile.getTileSheetCoords().x;
+    int yOffset = tile.getTileSheetCoords().y;
+    int tileWidth = tile.getDimensions().x;
+    int tileHeight = tile.getDimensions().y;
+
+    int destWidth = ui->currentTileGraphic->geometry().width();
+    int destHeight = ui->currentTileGraphic->geometry().height();
+
+    /* clip tilesheet to x, y, tilewidth, tileheight */
+    QPixmap gfx = mQTTileSheet.copy(xOffset, yOffset, tileWidth, tileHeight)
+                              .scaled(QSize(destWidth, destHeight), Qt::IgnoreAspectRatio);
+
+    ui->currentTileGraphic->setPixmap(gfx);
 }
 
 void MainWindow::setTileSelectLayout()
 {
-    QPixmap tileSheet(":/tiles/assets/tiles.png");
-    int tileSheetCols = std::floor(tileSheet.width() / mTileWidth);
-    int tileSheetRows = std::floor(tileSheet.height() / mTileHeight);
+
+    int tileSheetCols = std::floor(mQTTileSheet.width() / mTileWidth);
+    int tileSheetRows = std::floor(mQTTileSheet.height() / mTileHeight);
 
     /* layout for scrollarea */
     QGridLayout* layout = new QGridLayout(ui->scrollArea);
@@ -56,14 +72,17 @@ void MainWindow::setTileSelectLayout()
             int yOffset = (i*mTileHeight)+i;
 
             /* clip tilesheet to x, y, tilewidth, tileheight */
-            QPixmap tile = tileSheet.copy(xOffset, yOffset, mTileWidth, mTileHeight);
+            QPixmap tile = mQTTileSheet.copy(xOffset, yOffset, mTileWidth, mTileHeight);
 
             /* create new push button */
             JPushButton* button = new JPushButton(this);
 
             button->setClipBounds(yOffset, xOffset, mTileWidth, mTileHeight);
+
+            /* when button is clicked, mSignalMapper->map() is called */
             connect(button, SIGNAL(clicked()), mSignalMapper, SLOT(map()));
 
+            /* send package to canvas */
             sf::Rect<int> subRect = button->getClipBounds();
             QObject* package = new QObject();
             QRect rect;
@@ -74,6 +93,8 @@ void MainWindow::setTileSelectLayout()
             package->setProperty("bounds", QVariant(rect));
 
             mObjects.push_back(package);
+
+            /* let mSignalMapper know which action should pass which argument */
             mSignalMapper->setMapping(button, mObjects.back());
 
             /* set button's icon */
@@ -86,7 +107,23 @@ void MainWindow::setTileSelectLayout()
         }
     }
 
+    /*
+     * when mSignalMapper emits a SIGNAL(mapped(QObject*)),
+     * mSFMLView->setCurrentTileBounds(QObject*) gets called
+    */
     connect(mSignalMapper, SIGNAL(mapped(QObject*)), mSFMLView, SLOT(setCurrentTileBounds(QObject*)));
+}
+
+void MainWindow::resizeCurrentTileFrame()
+{
+    ui->currentTileFrame->setGeometry(0, 0, mWindowWidth / 3, mWindowHeight / 2);
+    //ui->currentTileGraphic->setGeometry();
+    ui->currentTileGraphic->setAlignment(Qt::AlignCenter);
+}
+
+void MainWindow::resizeTileSelect()
+{
+    ui->scrollArea->setGeometry(0, mWindowHeight / 2, mWindowWidth / 3, mWindowHeight / 2);
 }
 
 void MainWindow::resizeSFMLFrame()
@@ -95,8 +132,7 @@ void MainWindow::resizeSFMLFrame()
     int x = scrollAreaRect.x() + scrollAreaRect.width();
     int width = mWindowWidth - scrollAreaRect.width();
 
-    ui->SFMLFrame->setGeometry(x, 0,
-                            width, mWindowHeight);
+    ui->SFMLFrame->setGeometry(x, 0, width, mWindowHeight);
 }
 
 MainWindow::~MainWindow()

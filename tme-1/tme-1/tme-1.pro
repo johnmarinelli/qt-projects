@@ -22,7 +22,9 @@ SOURCES += main.cpp\
     jradiobutton.cpp \
     qsfmlrect.cpp \
     jpushbutton.cpp \
-    line.cpp
+    line.cpp \
+    tilepackage.cpp \
+    tile.cpp
 
 HEADERS  += mainwindow.h \
     qsfmlcanvas.h \
@@ -31,7 +33,9 @@ HEADERS  += mainwindow.h \
     qsfmlrect.h \
     utility.h \
     jpushbutton.h \
-    line.h
+    line.h \
+    tilepackage.h \
+    tile.h
 
 FORMS    += \
     mainwindow.ui

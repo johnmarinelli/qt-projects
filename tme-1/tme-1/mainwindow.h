@@ -3,6 +3,7 @@
 
 #include "mycanvas.h"
 #include "jpushbutton.h"
+#include "tile.h"
 
 #include <QMainWindow>
 #include <QRadioButton>
@@ -23,12 +24,14 @@ public:
     explicit MainWindow(QWidget *parent = 0);
 
     void setTileSelectLayout();
+    void resizeCurrentTileFrame();
     void resizeTileSelect();
     void resizeSFMLFrame();
 
     ~MainWindow();
 
 private slots:
+    void sendTileInformation(const Tile& tile);
 
 private:
     Ui::MainWindow *ui;
@@ -38,6 +41,8 @@ private:
     QFrame* mInputFrame;
     QFrame* mSFMLFrame;
     MyCanvas* mSFMLView;
+
+    QPixmap mQTTileSheet;
     sf::Texture mTilesheet;
 
     std::vector<QObject*> mObjects;

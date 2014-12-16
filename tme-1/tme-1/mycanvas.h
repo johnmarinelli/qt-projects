@@ -4,6 +4,7 @@
 #include "qsfmlcanvas.h"
 #include "qsfmlrect.h"
 #include "line.h"
+#include "tile.h"
 
 #include <iostream>
 #include <unordered_map>
@@ -30,9 +31,8 @@ private:
     void onUpdate();
 
     sf::Texture mTilesheet;
-    std::unordered_map<sf::Vector2i, sf::Sprite, Vector2iHash> mTiles;
-
-    sf::Sprite mSprite;
+    std::unordered_map<sf::Vector2i, Tile, Vector2iHash> mTiles;
+    Tile* mSelectedTile;
 
     sf::Rect<int> mCurrentTileBounds;
 
@@ -46,9 +46,14 @@ public:
     MyCanvas(QWidget *parent, const QPoint& position, const QSize& size, sf::Texture& tilesheet);
 
 signals:
+    void clicked();
+    void clicked(const Tile& tile);
 
 public slots:
     void setCurrentTileBounds(QObject* bounds);
+
+private slots:
+    void sendSelectedTile();
 
 protected:
     void mousePressEvent(QMouseEvent* event);

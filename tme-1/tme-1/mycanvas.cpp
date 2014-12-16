@@ -8,7 +8,8 @@ MyCanvas::MyCanvas(QWidget *parent, const QPoint& position, const QSize& size, s
     mTilesheet(tilesheet),
     mSize(size),
     mColumns(std::ceil(size.width() / TILE_WIDTH)),
-    mRows(std::ceil(size.height() / TILE_HEIGHT))
+    mRows(std::ceil(size.height() / TILE_HEIGHT)),
+    mSelectedTile(nullptr)
 {
     /* vertical lines */
     for(int i = 0; i < mColumns; ++i) {
@@ -25,6 +26,16 @@ MyCanvas::MyCanvas(QWidget *parent, const QPoint& position, const QSize& size, s
         line.mLine[0].color = sf::Color::Black;
         mGridLines.push_back(line);
     }
+
+    /* remap our normal clicked() function to our slot, sendSelectedTile */
+    connect(this, SIGNAL(clicked()), this, SLOT(sendSelectedTile()));
+}
+
+
+void MyCanvas::sendSelectedTile()
+{
+    /* then sendSelectedTile() will emit a different signal that passes an argument */
+    if(mSelectedTile) emit clicked(*mSelectedTile);
 }
 
 void MyCanvas::onInit()
@@ -40,7 +51,7 @@ void MyCanvas::onUpdate()
     }
 
     for(const auto& tile : mTiles) {
-        draw(tile.second);
+        draw(tile.second.getSprite());
     }
 }
 
@@ -64,6 +75,9 @@ void MyCanvas::mousePressEvent(QMouseEvent* event)
 
     sf::Vector2i coords(x, y);
 
+    /* find tile */
+    auto tile = mTiles.find(coords);
+
     if(event->button() & Qt::LeftButton) {
         /* place tile at snapped point */
         sf::Sprite sprite;
@@ -72,15 +86,21 @@ void MyCanvas::mousePressEvent(QMouseEvent* event)
         sprite.setTextureRect(mCurrentTileBounds);
 
         sprite.setPosition(x, y);
-        mTiles[coords] = sprite;
+        Tile tile(sprite);
+        tile.setCoords(sf::Vector2i(x, y));
+        tile.setTileSheetCoords(sf::Vector2i(mCurrentTileBounds.left, mCurrentTileBounds.top));
+        tile.setDimensions(sf::Vector2i(TILE_WIDTH, TILE_HEIGHT));
+
+        mTiles[coords] = tile;
+        mSelectedTile = &tile;
 
         std::cout << mTiles.size() << std::endl;
+
+        emit clicked();
     }
 
     else if(event->button() & Qt::RightButton) {
-        /* find & delete tile */
-        auto tile = mTiles.find(coords);
-
+        /* delete tile */
         if(tile != mTiles.end()) {
             mTiles.erase(tile);
         }

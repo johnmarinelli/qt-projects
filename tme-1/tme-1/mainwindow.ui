@@ -34,9 +34,9 @@
     <property name="geometry">
      <rect>
       <x>0</x>
-      <y>0</y>
+      <y>280</y>
       <width>171</width>
-      <height>221</height>
+      <height>301</height>
      </rect>
     </property>
     <property name="widgetResizable">
@@ -48,8 +48,37 @@
        <x>0</x>
        <y>0</y>
        <width>169</width>
-       <height>219</height>
+       <height>299</height>
       </rect>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QFrame" name="currentTileFrame">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>60</y>
+      <width>171</width>
+      <height>221</height>
+     </rect>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::StyledPanel</enum>
+    </property>
+    <property name="frameShadow">
+     <enum>QFrame::Raised</enum>
+    </property>
+    <widget class="QLabel" name="currentTileGraphic">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>0</y>
+       <width>128</width>
+       <height>128</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string/>
      </property>
     </widget>
    </widget>
