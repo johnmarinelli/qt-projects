@@ -6,8 +6,25 @@
 MyCanvas::MyCanvas(QWidget *parent, const QPoint& position, const QSize& size, sf::Texture& tilesheet) :
     QSFMLCanvas(parent, position, size),
     mTilesheet(tilesheet),
-    mSize(size)
+    mSize(size),
+    mColumns(std::ceil(size.width() / TILE_WIDTH)),
+    mRows(std::ceil(size.height() / TILE_HEIGHT))
 {
+    /* vertical lines */
+    for(int i = 0; i < mColumns; ++i) {
+        int x = i * TILE_WIDTH;
+        Line line(x, 0, x, size.height());
+        line.mLine[0].color = sf::Color::Black;
+        mGridLines.push_back(line);
+    }
+
+    /* horizontal lines */
+    for(int j = 0; j < mRows; ++j) {
+        int y = j * TILE_WIDTH;
+        Line line(0, y, size.width(), y);
+        line.mLine[0].color = sf::Color::Black;
+        mGridLines.push_back(line);
+    }
 }
 
 void MyCanvas::onInit()
@@ -17,6 +34,11 @@ void MyCanvas::onInit()
 void MyCanvas::onUpdate()
 {
     sf::RenderWindow::clear(sf::Color(255, 255, 255));
+
+    for(const auto& line : mGridLines) {
+        draw(line.mLine, 2, sf::Lines);
+    }
+
     for(const auto& tile : mTiles) {
         draw(tile.second);
     }

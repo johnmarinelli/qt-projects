@@ -21,7 +21,8 @@ SOURCES += main.cpp\
     mycanvas.cpp \
     jradiobutton.cpp \
     qsfmlrect.cpp \
-    jpushbutton.cpp
+    jpushbutton.cpp \
+    line.cpp
 
 HEADERS  += mainwindow.h \
     qsfmlcanvas.h \
@@ -30,7 +31,7 @@ HEADERS  += mainwindow.h \
     qsfmlrect.h \
     utility.h \
     jpushbutton.h \
-    Vector2d.h
+    line.h
 
 FORMS    += \
     mainwindow.ui
