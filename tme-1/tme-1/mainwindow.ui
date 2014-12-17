@@ -34,7 +34,7 @@
     <property name="geometry">
      <rect>
       <x>0</x>
-      <y>280</y>
+      <y>220</y>
       <width>171</width>
       <height>301</height>
      </rect>
@@ -57,7 +57,7 @@
     <property name="geometry">
      <rect>
       <x>0</x>
-      <y>60</y>
+      <y>0</y>
       <width>171</width>
       <height>221</height>
      </rect>
@@ -71,14 +71,73 @@
     <widget class="QLabel" name="currentTileGraphic">
      <property name="geometry">
       <rect>
-       <x>20</x>
-       <y>0</y>
-       <width>128</width>
-       <height>128</height>
+       <x>10</x>
+       <y>30</y>
+       <width>158</width>
+       <height>99</height>
       </rect>
      </property>
      <property name="text">
       <string/>
+     </property>
+    </widget>
+    <widget class="QComboBox" name="currentTileTraversable">
+     <property name="geometry">
+      <rect>
+       <x>90</x>
+       <y>170</y>
+       <width>79</width>
+       <height>23</height>
+      </rect>
+     </property>
+     <item>
+      <property name="text">
+       <string>True</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>False</string>
+      </property>
+     </item>
+    </widget>
+    <widget class="QLabel" name="traversableLabel">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>170</y>
+       <width>81</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Traversable</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="currentTileWorldCoords">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>110</y>
+       <width>101</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>World Position:</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="currentTileTileSheetCoords">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>140</y>
+       <width>121</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Tilesheet Position:</string>
      </property>
     </widget>
    </widget>

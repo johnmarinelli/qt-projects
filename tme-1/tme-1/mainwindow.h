@@ -24,6 +24,7 @@ public:
     explicit MainWindow(QWidget *parent = 0);
 
     void setTileSelectLayout();
+    void setCurrentTileFrameLayout();
     void resizeCurrentTileFrame();
     void resizeTileSelect();
     void resizeSFMLFrame();

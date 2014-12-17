@@ -29,6 +29,7 @@ MainWindow::MainWindow(QWidget *parent) :
     mSFMLView = new MyCanvas(mSFMLFrame, QPoint(0,0),
                              QSize(mSFMLFrame->geometry().width(), mSFMLFrame->geometry().height()),
                              mTilesheet);
+    setCurrentTileFrameLayout();
     setTileSelectLayout();
 
     connect(mSFMLView, SIGNAL(clicked(const Tile&)), this, SLOT(sendTileInformation(const Tile&)));
@@ -49,6 +50,20 @@ void MainWindow::sendTileInformation(const Tile& tile)
                               .scaled(QSize(destWidth, destHeight), Qt::IgnoreAspectRatio);
 
     ui->currentTileGraphic->setPixmap(gfx);
+
+    /* set coordinate texts */
+    std::string worldCoordText = "World Position ";
+    worldCoordText.append(std::to_string(tile.getCoords().x));
+    worldCoordText.append(", ");
+    worldCoordText.append(std::to_string(tile.getCoords().y));
+    ui->currentTileWorldCoords->setText(QString(worldCoordText.c_str()));
+
+
+    std::string tileSheetCoordText = "Tilesheet Position ";
+    tileSheetCoordText.append(std::to_string(xOffset));
+    tileSheetCoordText.append(", ");
+    tileSheetCoordText.append(std::to_string(yOffset));
+    ui->currentTileTileSheetCoords->setText(QString(tileSheetCoordText.c_str()));
 }
 
 void MainWindow::setTileSelectLayout()
@@ -114,11 +129,24 @@ void MainWindow::setTileSelectLayout()
     connect(mSignalMapper, SIGNAL(mapped(QObject*)), mSFMLView, SLOT(setCurrentTileBounds(QObject*)));
 }
 
+void MainWindow::setCurrentTileFrameLayout()
+{
+    /* layout for current tile frame */
+    QGridLayout* layout = new QGridLayout(ui->currentTileFrame);
+    ui->currentTileFrame->setLayout(layout);
+    ui->currentTileGraphic->setFixedSize(128, 128);
+    layout->addWidget(ui->currentTileGraphic, 0, 0, 5, 5, Qt::AlignTop);
+
+    /* set coordinate texts & traversable combo box */
+    layout->addWidget(ui->currentTileWorldCoords, 2, 0, 5, 5, Qt::AlignLeft);
+    layout->addWidget(ui->currentTileTileSheetCoords, 3, 0, 5, 5, Qt::AlignLeft);
+    layout->addWidget(ui->traversableLabel, 4, 0, 5, 5, Qt::AlignLeft);
+    layout->addWidget(ui->currentTileTraversable, 4, 1, 5, 5, Qt::AlignRight);
+}
+
 void MainWindow::resizeCurrentTileFrame()
 {
     ui->currentTileFrame->setGeometry(0, 0, mWindowWidth / 3, mWindowHeight / 2);
-    //ui->currentTileGraphic->setGeometry();
-    ui->currentTileGraphic->setAlignment(Qt::AlignCenter);
 }
 
 void MainWindow::resizeTileSelect()
