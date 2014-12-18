@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "qsfmlrect.h"
+#include "utility.h"
 
 #include <QMessageBox>
 #include <QVBoxLayout>
@@ -33,6 +34,8 @@ MainWindow::MainWindow(QWidget *parent) :
     setTileSelectLayout();
 
     connect(mSFMLView, SIGNAL(clicked(const Tile&)), this, SLOT(sendTileInformation(const Tile&)));
+    connect(ui->currentTileTraversable, SIGNAL(currentIndexChanged(const QString&)),
+        this, SLOT(sendTraversableInformation(const QString&)));
 }
 
 void MainWindow::sendTileInformation(const Tile& tile)
@@ -58,12 +61,30 @@ void MainWindow::sendTileInformation(const Tile& tile)
     worldCoordText.append(std::to_string(tile.getCoords().y));
     ui->currentTileWorldCoords->setText(QString(worldCoordText.c_str()));
 
-
     std::string tileSheetCoordText = "Tilesheet Position ";
     tileSheetCoordText.append(std::to_string(xOffset));
     tileSheetCoordText.append(", ");
     tileSheetCoordText.append(std::to_string(yOffset));
     ui->currentTileTileSheetCoords->setText(QString(tileSheetCoordText.c_str()));
+
+    /* set if tile is traversable or not */
+    int index = ui->currentTileTraversable->findText(boolToString(tile.getTraversable()));
+    if(-1 != index) {
+        ui->currentTileTraversable->setCurrentIndex(index);
+    }
+}
+
+void MainWindow::sendTraversableInformation(const QString& str)
+{
+    std::cout << str.toStdString() << std::endl;
+
+    bool isTraversable = false;
+
+    if(!str.compare(QString("True"), Qt::CaseInsensitive)) {
+        isTraversable = true;
+    }
+
+    mSFMLView->setCurrentTileTraversable(isTraversable);
 }
 
 void MainWindow::setTileSelectLayout()

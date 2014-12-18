@@ -16,4 +16,12 @@ T1 getNearestMultiple(const T1& actual, const T2& multiple)
     return std::ceil(actual / multiple) * multiple;
 }
 
+/*
+ * bool to string
+ */
+inline const char* const boolToString(const bool b)
+{
+    return b ? "True" : "False";
+}
+
 #endif // UTILITY_H

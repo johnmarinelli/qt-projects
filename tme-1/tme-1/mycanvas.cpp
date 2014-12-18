@@ -65,6 +65,11 @@ void MyCanvas::setCurrentTileBounds(QObject* bounds)
     mCurrentTileBounds.height = r.height();
 }
 
+void MyCanvas::setCurrentTileTraversable(bool traversable)
+{
+    if(mSelectedTile) mSelectedTile->setTraversable(traversable);
+}
+
 void MyCanvas::mousePressEvent(QMouseEvent* event)
 {
     int x = event->pos().x();
@@ -92,17 +97,16 @@ void MyCanvas::mousePressEvent(QMouseEvent* event)
         tile.setDimensions(sf::Vector2i(TILE_WIDTH, TILE_HEIGHT));
 
         mTiles[coords] = tile;
-        mSelectedTile = &tile;
-
-        std::cout << mTiles.size() << std::endl;
-
-        emit clicked();
+        mSelectedTile = &(mTiles[coords]);
     }
 
     else if(event->button() & Qt::RightButton) {
         /* delete tile */
         if(tile != mTiles.end()) {
-            mTiles.erase(tile);
+            //mTiles.erase(tile);
+            mSelectedTile = &(tile->second);
         }
     }
+
+    emit clicked();
 }

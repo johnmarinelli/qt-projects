@@ -1,4 +1,5 @@
 #include "tile.h"
+#include <iostream>
 
 Tile::Tile()
     : mTraversable(true)
@@ -31,6 +32,11 @@ const sf::Vector2i& Tile::getDimensions() const
     return mDimensions;
 }
 
+const bool Tile::getTraversable() const
+{
+    return mTraversable;
+}
+
 void Tile::setCoords(const sf::Vector2i& coords)
 {
     mCoords.x = coords.x;
@@ -50,5 +56,6 @@ void Tile::setDimensions(const sf::Vector2i& dimensions)
 
 void Tile::setTraversable(bool traversable)
 {
+    std::cout << "Tile at " << std::to_string(mCoords.x) << ", " << std::to_string(mCoords.y) << " is " << traversable << std::endl;
     mTraversable = traversable;
 }

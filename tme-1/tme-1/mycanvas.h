@@ -45,6 +45,8 @@ private:
 public:
     MyCanvas(QWidget *parent, const QPoint& position, const QSize& size, sf::Texture& tilesheet);
 
+    void setCurrentTileTraversable(bool traversable);
+
 signals:
     void clicked();
     void clicked(const Tile& tile);
