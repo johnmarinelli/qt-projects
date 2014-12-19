@@ -7,6 +7,7 @@
 #include <QVBoxLayout>
 #include <QGridLayout>
 #include <QPushButton>
+#include <QDesktopWidget>
 #include <QDir>
 #include <QString>
 
@@ -15,11 +16,19 @@
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
-    mQTTileSheet(":/tiles/assets/tiles.png"),
+    mTileSheet(":/tiles/assets/tiles.png", "tiles.png", QSize(32, 32)),
+    mWindowWidth(0),
+    mWindowHeight(0),
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    this->setWindowState(Qt::WindowMaximized);
+    mWindowWidth = QApplication::desktop()->availableGeometry().width();
+    mWindowHeight = QApplication::desktop()->availableGeometry().height();
     this->setGeometry(0, 0, mWindowWidth, mWindowHeight);
+
+    std::cout << std::to_string(mWindowWidth) << std::endl;
+
     resizeCurrentTileFrame();
     resizeTileSelect();
     resizeSFMLFrame();
@@ -29,7 +38,7 @@ MainWindow::MainWindow(QWidget *parent) :
     mSFMLFrame = ui->SFMLFrame;
     mSFMLView = new MyCanvas(mSFMLFrame, QPoint(0,0),
                              QSize(mSFMLFrame->geometry().width(), mSFMLFrame->geometry().height()),
-                             mTilesheet);
+                             mTileSheet.getSfTileSheet());
     setCurrentTileFrameLayout();
     setTileSelectLayout();
 
@@ -49,8 +58,8 @@ void MainWindow::sendTileInformation(const Tile& tile)
     int destHeight = ui->currentTileGraphic->geometry().height();
 
     /* clip tilesheet to x, y, tilewidth, tileheight */
-    QPixmap gfx = mQTTileSheet.copy(xOffset, yOffset, tileWidth, tileHeight)
-                              .scaled(QSize(destWidth, destHeight), Qt::IgnoreAspectRatio);
+    QPixmap gfx = mTileSheet.getQtTileSheet().copy(xOffset, yOffset, tileWidth, tileHeight)
+            .scaled(QSize(destWidth, destHeight), Qt::IgnoreAspectRatio);
 
     ui->currentTileGraphic->setPixmap(gfx);
 
@@ -89,9 +98,8 @@ void MainWindow::sendTraversableInformation(const QString& str)
 
 void MainWindow::setTileSelectLayout()
 {
-
-    int tileSheetCols = std::floor(mQTTileSheet.width() / mTileWidth);
-    int tileSheetRows = std::floor(mQTTileSheet.height() / mTileHeight);
+    int tileSheetCols = mTileSheet.getColumns();
+    int tileSheetRows = mTileSheet.getRows();
 
     /* layout for scrollarea */
     QGridLayout* layout = new QGridLayout(ui->scrollArea);
@@ -108,8 +116,7 @@ void MainWindow::setTileSelectLayout()
             int yOffset = (i*mTileHeight)+i;
 
             /* clip tilesheet to x, y, tilewidth, tileheight */
-            QPixmap tile = mQTTileSheet.copy(xOffset, yOffset, mTileWidth, mTileHeight);
-
+            QPixmap tile = mTileSheet.getQtTileSheet().copy(xOffset, yOffset, mTileWidth, mTileHeight);
             /* create new push button */
             JPushButton* button = new JPushButton(this);
 

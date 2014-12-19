@@ -33,7 +33,7 @@ public:
     const sf::Vector2i& getCoords() const;
     const sf::Vector2i& getTileSheetCoords() const;
     const sf::Vector2i& getDimensions() const;
-    const bool getTraversable() const;
+    bool getTraversable() const;
 
     void setCoords(const sf::Vector2i& coords);
     void setTileSheetCoords(const sf::Vector2i& tileSheetCoords);

@@ -32,7 +32,7 @@ const sf::Vector2i& Tile::getDimensions() const
     return mDimensions;
 }
 
-const bool Tile::getTraversable() const
+bool Tile::getTraversable() const
 {
     return mTraversable;
 }

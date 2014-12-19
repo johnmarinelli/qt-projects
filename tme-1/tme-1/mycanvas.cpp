@@ -3,7 +3,7 @@
 #include <iostream>
 #include <sstream>
 
-MyCanvas::MyCanvas(QWidget *parent, const QPoint& position, const QSize& size, sf::Texture& tilesheet) :
+MyCanvas::MyCanvas(QWidget *parent, const QPoint& position, const QSize& size, const sf::Texture& tilesheet) :
     QSFMLCanvas(parent, position, size),
     mTilesheet(tilesheet),
     mSize(size),

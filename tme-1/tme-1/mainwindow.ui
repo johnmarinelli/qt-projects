@@ -30,29 +30,6 @@
      <enum>QFrame::Raised</enum>
     </property>
    </widget>
-   <widget class="QScrollArea" name="scrollArea">
-    <property name="geometry">
-     <rect>
-      <x>0</x>
-      <y>220</y>
-      <width>171</width>
-      <height>301</height>
-     </rect>
-    </property>
-    <property name="widgetResizable">
-     <bool>true</bool>
-    </property>
-    <widget class="QWidget" name="scrollAreaWidgetContents">
-     <property name="geometry">
-      <rect>
-       <x>0</x>
-       <y>0</y>
-       <width>169</width>
-       <height>299</height>
-      </rect>
-     </property>
-    </widget>
-   </widget>
    <widget class="QFrame" name="currentTileFrame">
     <property name="geometry">
      <rect>
@@ -138,6 +115,29 @@
      </property>
      <property name="text">
       <string>Tilesheet Position:</string>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QScrollArea" name="scrollArea">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>220</y>
+      <width>171</width>
+      <height>251</height>
+     </rect>
+    </property>
+    <property name="widgetResizable">
+     <bool>true</bool>
+    </property>
+    <widget class="QWidget" name="scrollAreaWidgetContents">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>0</y>
+       <width>169</width>
+       <height>249</height>
+      </rect>
      </property>
     </widget>
    </widget>

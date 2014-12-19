@@ -43,7 +43,7 @@ private:
     std::vector<Line> mGridLines;
 
 public:
-    MyCanvas(QWidget *parent, const QPoint& position, const QSize& size, sf::Texture& tilesheet);
+    MyCanvas(QWidget *parent, const QPoint& position, const QSize& size, const sf::Texture& tilesheet);
 
     void setCurrentTileTraversable(bool traversable);
 

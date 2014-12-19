@@ -3,6 +3,7 @@
 
 #include "mycanvas.h"
 #include "jpushbutton.h"
+#include "tilesheet.h"
 #include "tile.h"
 
 #include <QMainWindow>
@@ -44,7 +45,8 @@ private:
     QFrame* mSFMLFrame;
     MyCanvas* mSFMLView;
 
-    QPixmap mQTTileSheet;
+    TileSheet mTileSheet;
+
     sf::Texture mTilesheet;
 
     std::vector<QObject*> mObjects;
@@ -54,8 +56,8 @@ private:
     const int mTileWidth = 32;
     const int mTileHeight = 32;
 
-    const int mWindowWidth = 700;
-    const int mWindowHeight = 700;
+    int mWindowWidth;
+    int mWindowHeight;
 };
 
 #endif // MAINWINDOW_H
