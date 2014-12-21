@@ -25,7 +25,7 @@ SOURCES += main.cpp\
     line.cpp \
     tile.cpp \
     tilesheet.cpp \
-    handler.cpp
+    tilesheethandler.cpp
 
 HEADERS  += mainwindow.h \
     qsfmlcanvas.h \
@@ -37,7 +37,7 @@ HEADERS  += mainwindow.h \
     line.h \
     tile.h \
     tilesheet.h \
-    handler.h
+    tilesheethandler.h
 
 FORMS    += \
     mainwindow.ui

@@ -8,14 +8,14 @@ TileSheet::TileSheet() :
 {
 }
 
-TileSheet::TileSheet(const QString& qtPath, const std::string& sfPath, const QSize& tileSize) :
-    mQtTileSheet(qtPath),
+TileSheet::TileSheet(const QString& path, const QSize& tileSize) :
+    mQtTileSheet(path),
     mSize(0, 0),
     mTileSize(tileSize),
     mRows(0),
     mColumns(0)
 {
-    mSfTileSheet.loadFromFile(sfPath);
+    mSfTileSheet.loadFromFile(path.toStdString());
     initTileSheet();
 }
 

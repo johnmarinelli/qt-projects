@@ -22,7 +22,6 @@ private:
 public:
     TileSheet();
     TileSheet(const QString& qtPath,
-              const std::string& sfPath,
               const QSize& tileSize);
 
     void setQtTileSheet(const QString& path);

@@ -3,7 +3,7 @@
 
 #include "mycanvas.h"
 #include "jpushbutton.h"
-#include "tilesheet.h"
+#include "tilesheethandler.h"
 #include "tile.h"
 
 #include <QMainWindow>
@@ -46,6 +46,7 @@ private:
     MyCanvas* mSFMLView;
 
     TileSheet mTileSheet;
+    TileSheetHandler mTileSheets;
 
     std::vector<QObject*> mObjects;
 

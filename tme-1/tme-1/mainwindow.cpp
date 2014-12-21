@@ -16,7 +16,7 @@
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
-    mTileSheet("tiles.png", "tiles.png", QSize(32, 32)),
+    mTileSheet("tiles.png", QSize(32, 32)),
     mWindowWidth(0),
     mWindowHeight(0),
     ui(new Ui::MainWindow)
@@ -28,6 +28,11 @@ MainWindow::MainWindow(QWidget *parent) :
     this->setGeometry(0, 0, mWindowWidth, mWindowHeight);
 
     std::cout << std::getenv("PWD") << std::endl;
+
+    mTileSheets.add("tiles.png", QSize(32,32));
+    mTileSheets.add("tiles2.png", QSize(32,32));
+
+    mTileSheet = *(mTileSheets.get("tiles2.png"));
 
     resizeCurrentTileFrame();
     resizeTileSelect();
