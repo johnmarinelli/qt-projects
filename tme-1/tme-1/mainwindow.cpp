@@ -16,7 +16,7 @@
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
-    mTileSheet(":/tiles/assets/tiles.png", "tiles.png", QSize(32, 32)),
+    mTileSheet("tiles.png", "tiles.png", QSize(32, 32)),
     mWindowWidth(0),
     mWindowHeight(0),
     ui(new Ui::MainWindow)
@@ -27,13 +27,11 @@ MainWindow::MainWindow(QWidget *parent) :
     mWindowHeight = QApplication::desktop()->availableGeometry().height();
     this->setGeometry(0, 0, mWindowWidth, mWindowHeight);
 
-    std::cout << std::to_string(mWindowWidth) << std::endl;
+    std::cout << std::getenv("PWD") << std::endl;
 
     resizeCurrentTileFrame();
     resizeTileSelect();
     resizeSFMLFrame();
-
-    mTilesheet.loadFromFile("tiles.png");
 
     mSFMLFrame = ui->SFMLFrame;
     mSFMLView = new MyCanvas(mSFMLFrame, QPoint(0,0),

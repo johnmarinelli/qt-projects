@@ -47,8 +47,6 @@ private:
 
     TileSheet mTileSheet;
 
-    sf::Texture mTilesheet;
-
     std::vector<QObject*> mObjects;
 
     std::vector<JPushButton*> mPushButtons;

@@ -24,7 +24,8 @@ SOURCES += main.cpp\
     jpushbutton.cpp \
     line.cpp \
     tile.cpp \
-    tilesheet.cpp
+    tilesheet.cpp \
+    handler.cpp
 
 HEADERS  += mainwindow.h \
     qsfmlcanvas.h \
@@ -35,7 +36,8 @@ HEADERS  += mainwindow.h \
     jpushbutton.h \
     line.h \
     tile.h \
-    tilesheet.h
+    tilesheet.h \
+    handler.h
 
 FORMS    += \
     mainwindow.ui
