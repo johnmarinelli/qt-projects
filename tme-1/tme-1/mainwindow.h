@@ -10,6 +10,7 @@
 #include <QRadioButton>
 #include <QFrame>
 #include <QSignalMapper>
+#include <QScrollArea>
 
 #include <vector>
 
@@ -24,7 +25,7 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = 0);
 
-    void setTileSelectLayout();
+    void setTileSelectLayout(QScrollArea* scrollArea, QWidget* scrollAreaContents, const TileSheet& tileSheet);
     void setCurrentTileFrameLayout();
     void resizeCurrentTileFrame();
     void resizeTileSelect();

@@ -1,20 +1,26 @@
 #include "tilesheethandler.h"
 
+unsigned short TileSheetHandler::IDCounter = 0;
+
 TileSheetHandler::TileSheetHandler()
 {
 }
 
-void TileSheetHandler::add(const std::string& path, const QSize& tileSize)
+/*
+ * returns a handle to the created TileSheet
+ */
+unsigned short TileSheetHandler::add(const std::string& path, const QSize& tileSize)
 {
-    if(!get(path)) {
-        std::shared_ptr<TileSheet> ts =
-            std::make_shared<TileSheet>(QString(path.c_str()), tileSize);
+    std::shared_ptr<TileSheet> ts =
+        std::make_shared<TileSheet>(QString(path.c_str()), tileSize);
 
-        mTileSheets[path] = ts;
-    }
+    auto id = IDCounter++;
+    mTileSheets[id] = ts;
+
+    return id;
 }
 
-std::shared_ptr<TileSheet> TileSheetHandler::get(const std::string& key)
+std::shared_ptr<TileSheet> TileSheetHandler::get(unsigned short key)
 {
     auto ts = mTileSheets.find(key);
     if(ts != mTileSheets.end()) {
@@ -23,7 +29,7 @@ std::shared_ptr<TileSheet> TileSheetHandler::get(const std::string& key)
     else return nullptr;
 }
 
-bool TileSheetHandler::remove(const std::string& path)
+bool TileSheetHandler::remove(unsigned short path)
 {
     auto ts = mTileSheets.find(path);
     if(ts != mTileSheets.end()) {
