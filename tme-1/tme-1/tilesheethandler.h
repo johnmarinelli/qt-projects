@@ -23,8 +23,8 @@ public:
     TileSheetHandler& operator=(const TileSheetHandler&) = delete;
 
     unsigned short add(const std::string& path, const QSize& tileSize);
-    std::shared_ptr<TileSheet> get(unsigned short key);
-    bool remove(unsigned short path);
+    std::shared_ptr<TileSheet> get(unsigned short key) const;
+    bool remove(unsigned short key);
 
 };
 

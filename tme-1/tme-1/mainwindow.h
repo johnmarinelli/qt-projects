@@ -36,20 +36,18 @@ public:
 private slots:
     void sendTileInformation(const Tile& tile);
     void sendTraversableInformation(const QString& str);
+    void setCurrentTileSheetIndex(int index);
 
 private:
     Ui::MainWindow *ui;
-
-    QSignalMapper* mSignalMapper;
 
     QFrame* mInputFrame;
     QFrame* mSFMLFrame;
     MyCanvas* mSFMLView;
 
     TileSheet mTileSheet;
-    TileSheetHandler mTileSheets;
-
-    std::vector<QObject*> mObjects;
+    TileSheetHandler mTileSheetHandler;
+    unsigned short mTileSheetIndex;
 
     std::vector<JPushButton*> mPushButtons;
 

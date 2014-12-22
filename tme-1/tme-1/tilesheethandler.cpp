@@ -20,7 +20,7 @@ unsigned short TileSheetHandler::add(const std::string& path, const QSize& tileS
     return id;
 }
 
-std::shared_ptr<TileSheet> TileSheetHandler::get(unsigned short key)
+std::shared_ptr<TileSheet> TileSheetHandler::get(unsigned short key) const
 {
     auto ts = mTileSheets.find(key);
     if(ts != mTileSheets.end()) {
@@ -29,9 +29,9 @@ std::shared_ptr<TileSheet> TileSheetHandler::get(unsigned short key)
     else return nullptr;
 }
 
-bool TileSheetHandler::remove(unsigned short path)
+bool TileSheetHandler::remove(unsigned short key)
 {
-    auto ts = mTileSheets.find(path);
+    auto ts = mTileSheets.find(key);
     if(ts != mTileSheets.end()) {
         mTileSheets.erase(ts);
         return true;

@@ -5,10 +5,12 @@
 #include "qsfmlrect.h"
 #include "line.h"
 #include "tile.h"
+#include "tilesheethandler.h"
 
 #include <iostream>
 #include <unordered_map>
 #include <QMouseEvent>
+#include <memory>
 
 /*
  * functor to hash keys.
@@ -30,8 +32,16 @@ private:
     void onInit();
     void onUpdate();
 
+    typedef std::unordered_map<sf::Vector2<int>, Tile, Vector2iHash> TilesMap;
+    typedef std::map<unsigned short, TilesMap> TileSheetsMap;
+
     sf::Texture mTilesheet;
     std::unordered_map<sf::Vector2i, Tile, Vector2iHash> mTiles;
+
+    const TileSheetHandler& mTileSheetHandler;
+    TileSheetsMap mTileSheets;
+    unsigned short mTileSheetIndex;
+
     Tile* mSelectedTile;
 
     sf::Rect<int> mCurrentTileBounds;
@@ -43,7 +53,7 @@ private:
     std::vector<Line> mGridLines;
 
 public:
-    MyCanvas(QWidget *parent, const QPoint& position, const QSize& size, const sf::Texture& tilesheet);
+    MyCanvas(QWidget *parent, const QPoint& position, const QSize& size, const TileSheetHandler& tileSheetHandler);
 
     void setCurrentTileTraversable(bool traversable);
 
@@ -53,6 +63,8 @@ signals:
 
 public slots:
     void setCurrentTileBounds(QObject* bounds);
+    void setCurrentTile(const sf::Rect<int>& bounds, std::shared_ptr<const TileSheet> tileSheet);
+    void setCurrentTileSheetIndex(int index);
 
 private slots:
     void sendSelectedTile();

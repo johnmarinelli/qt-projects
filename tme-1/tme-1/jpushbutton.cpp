@@ -1,9 +1,17 @@
 #include "jpushbutton.h"
 
-JPushButton::JPushButton(QWidget *parent) :
+JPushButton::JPushButton(QWidget *parent, const TileSheet* tileSheetHandle) :
     QPushButton(parent),
+    mTileSheetHandle(tileSheetHandle),
     mClipBounds(0, 0, 0, 0)
 {
+    /* remap our normal clicked() function to our slot, sendTileToDraw */
+    connect(this, SIGNAL(clicked()), this, SLOT(sendTileToDraw()));
+}
+
+void JPushButton::sendTileToDraw()
+{
+    emit clicked(mClipBounds, mTileSheetHandle);
 }
 
 void JPushButton::setClipBounds(int top, int left, int width, int height)

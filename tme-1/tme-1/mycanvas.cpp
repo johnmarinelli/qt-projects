@@ -1,11 +1,16 @@
 #include "mycanvas.h"
 #include "utility.h"
+
 #include <iostream>
 #include <sstream>
 
-MyCanvas::MyCanvas(QWidget *parent, const QPoint& position, const QSize& size, const sf::Texture& tilesheet) :
+MyCanvas::MyCanvas(QWidget *parent,
+                   const QPoint& position,
+                   const QSize& size,
+                   const TileSheetHandler& tileSheetHandler) :
     QSFMLCanvas(parent, position, size),
-    mTilesheet(tilesheet),
+    mTileSheetHandler(tileSheetHandler),
+    mTileSheetIndex(0),
     mSize(size),
     mColumns(std::ceil(size.width() / TILE_WIDTH)),
     mRows(std::ceil(size.height() / TILE_HEIGHT)),
@@ -50,6 +55,22 @@ void MyCanvas::onUpdate()
         draw(line.mLine, 2, sf::Lines);
     }
 
+    /* for each different tilesheet
+    for(const auto& index : mTileSheets) {
+        unsigned short key = index.first;
+        auto tileSheet = mTileSheetHandler.get(key);
+
+        /* switch tilesheet
+        mTilesheet = tileSheet.get()->getSfTileSheet();
+
+        std::cout << std::to_string(mTileSheets.at(key).size()) << std::endl;
+
+        /* draw tiles associated with that tilesheet
+        for(const auto& tile : mTileSheets.at(key)) {
+            draw(tile.second.getSprite());
+        }
+    }*/
+
     for(const auto& tile : mTiles) {
         draw(tile.second.getSprite());
     }
@@ -65,9 +86,20 @@ void MyCanvas::setCurrentTileBounds(QObject* bounds)
     mCurrentTileBounds.height = r.height();
 }
 
+void MyCanvas::setCurrentTile(const sf::Rect<int>& bounds, std::shared_ptr<const TileSheet> tileSheet)
+{
+    mCurrentTileBounds = bounds;
+    mTilesheet = tileSheet.get()->getSfTileSheet();
+}
+
 void MyCanvas::setCurrentTileTraversable(bool traversable)
 {
     if(mSelectedTile) mSelectedTile->setTraversable(traversable);
+}
+
+void MyCanvas::setCurrentTileSheetIndex(int index)
+{
+    mTileSheetIndex = index;
 }
 
 void MyCanvas::mousePressEvent(QMouseEvent* event)
@@ -86,22 +118,38 @@ void MyCanvas::mousePressEvent(QMouseEvent* event)
     if(event->button() & Qt::LeftButton) {
         /* place tile at snapped point */
         sf::Sprite sprite;
+        mTilesheet = mTileSheetHandler.get(mTileSheetIndex)->getSfTileSheet();
 
-        sprite.setTexture(mTilesheet);
+        sprite.setTexture(mTileSheetHandler.get(mTileSheetIndex)->getSfTileSheet());
         sprite.setTextureRect(mCurrentTileBounds);
 
         sprite.setPosition(x, y);
+
         Tile tile(sprite);
         tile.setCoords(sf::Vector2i(x, y));
         tile.setTileSheetCoords(sf::Vector2i(mCurrentTileBounds.left, mCurrentTileBounds.top));
         tile.setDimensions(sf::Vector2i(TILE_WIDTH, TILE_HEIGHT));
+
+        /*
+        if(mTileSheets.find(mTileSheetIndex) != mTileSheets.end()) {
+            TilesMap tilesMap = mTileSheets.at(mTileSheetIndex);
+            tilesMap[coords] = tile;
+
+        }
+        else {
+            TilesMap tilesMap;
+            tilesMap[coords] = tile;
+            mTileSheets[mTileSheetIndex] = tilesMap;
+        }*/
+
+        //tilesFromSheet[coords] = tile;
 
         mTiles[coords] = tile;
         mSelectedTile = &(mTiles[coords]);
     }
 
     else if(event->button() & Qt::RightButton) {
-        /* delete tile */
+        /* select tile */
         if(tile != mTiles.end()) {
             //mTiles.erase(tile);
             mSelectedTile = &(tile->second);

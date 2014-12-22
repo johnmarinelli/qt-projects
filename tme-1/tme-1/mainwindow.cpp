@@ -17,9 +17,9 @@
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
-    mTileSheet("tiles.png", QSize(32, 32)),
     mWindowWidth(0),
     mWindowHeight(0),
+    mTileSheetIndex(0),
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
@@ -28,58 +28,63 @@ MainWindow::MainWindow(QWidget *parent) :
     mWindowHeight = QApplication::desktop()->availableGeometry().height();
     this->setGeometry(0, 0, mWindowWidth, mWindowHeight);
 
-    /* add all tilesheets to mTileSheets */
+    resizeCurrentTileFrame();
+    resizeTileSelect();
+    resizeSFMLFrame();
+
+    mSFMLFrame = ui->SFMLFrame;
+    mSFMLView = new MyCanvas(mSFMLFrame, QPoint(0,0),
+                             QSize(mSFMLFrame->geometry().width(), mSFMLFrame->geometry().height()),
+                             mTileSheetHandler);
+
+    /* add all tilesheets to mTileSheetHandler */
     QDir assetsDir("../tme-1/assets");
     QFileInfoList fileInfoList = assetsDir.entryInfoList(QDir::NoDotAndDotDot|QDir::AllEntries);
 
-    resizeTileSelect();
-
     std::for_each(fileInfoList.begin(), fileInfoList.end(), [this](const QFileInfo& fileInfo) {
         /* add tilesheet to our vector */
-        int index = mTileSheets.add(fileInfo.absoluteFilePath().toStdString(), QSize(32, 32));
+        int index = mTileSheetHandler.add(fileInfo.absoluteFilePath().toStdString(), QSize(32, 32));
 
         /* add a new tab with scroll area */
         QWidget* tab = new QWidget(ui->tileSheetTabs);
         QRect tabViewRect = ui->tileSheetTabs->geometry();
 
-        tabViewRect.setWidth(tabViewRect.width()-10);
-        tabViewRect.setHeight(tabViewRect.height()-10);
-        tab->setLayout(new QGridLayout(tab));
+        /* add tab's layout */
+        QGridLayout* tabGridLayout = new QGridLayout(tab);
+        tab->setLayout(tabGridLayout);
         tab->setGeometry(tabViewRect);
-
-        std::cout << std::to_string(tab->geometry().width()) << std::endl;
-        std::cout << std::to_string(tab->geometry().height()) << std::endl;
-
-        ui->tileSheetTabs->addTab(tab, QString(std::to_string(index).c_str()));
 
         /* create a scroll area for this tilesheet */
         QScrollArea* scrollArea = new QScrollArea(tab);
         QWidget* scrollAreaContents = new QWidget(scrollArea);
+        scrollArea->setWidget(scrollAreaContents);
+
+        /* add scroll area to tab's layout */
+        tabGridLayout->addWidget(scrollArea);
 
         QRect tabRect = tab->geometry();
         scrollArea->setGeometry(tabRect);
         scrollAreaContents->setGeometry(tabRect);
 
-
         /* set scroll area's layout */
-        this->setTileSelectLayout(scrollArea, scrollAreaContents, *(mTileSheets.get(index).get()));
+        this->setTileSelectLayout(scrollArea, scrollAreaContents, *(mTileSheetHandler.get(index).get()));
+        ui->tileSheetTabs->addTab(tab, QString(std::to_string(index).c_str()));
     });
-    resizeCurrentTileFrame();
-    //resizeTileSelect();
-    resizeSFMLFrame();
 
-    mTileSheet = *(mTileSheets.get(1));
-
-    mSFMLFrame = ui->SFMLFrame;
-    mSFMLView = new MyCanvas(mSFMLFrame, QPoint(0,0),
-                             QSize(mSFMLFrame->geometry().width(), mSFMLFrame->geometry().height()),
-                             mTileSheet.getSfTileSheet());
+//    mTileSheet = *(mTileSheetHandler.get(mTileSheetTabIndex));
 
     setCurrentTileFrameLayout();
 
+    /* connect canvas to tile information frame */
     connect(mSFMLView, SIGNAL(clicked(const Tile&)), this, SLOT(sendTileInformation(const Tile&)));
+
+    /* connect tile information frame to current tile selected */
     connect(ui->currentTileTraversable, SIGNAL(currentIndexChanged(const QString&)),
         this, SLOT(sendTraversableInformation(const QString&)));
+
+    /* connect tab switching to change mTileSheet */
+    connect(ui->tileSheetTabs, SIGNAL(currentChanged(int)), mSFMLView, SLOT(setCurrentTileSheetIndex(int)));
+    connect(ui->tileSheetTabs, SIGNAL(currentChanged(int)), this, SLOT(setCurrentTileSheetIndex(int)));
 }
 
 void MainWindow::sendTileInformation(const Tile& tile)
@@ -93,8 +98,8 @@ void MainWindow::sendTileInformation(const Tile& tile)
     int destHeight = ui->currentTileGraphic->geometry().height();
 
     /* clip tilesheet to x, y, tilewidth, tileheight */
-    QPixmap gfx = mTileSheet.getQtTileSheet().copy(xOffset, yOffset, tileWidth, tileHeight)
-            .scaled(QSize(destWidth, destHeight), Qt::IgnoreAspectRatio);
+    QPixmap gfx = mTileSheetHandler.get(mTileSheetIndex)->getQtTileSheet().copy(xOffset, yOffset, tileWidth, tileHeight)
+                    .scaled(QSize(destWidth, destHeight), Qt::IgnoreAspectRatio);
 
     ui->currentTileGraphic->setPixmap(gfx);
 
@@ -120,8 +125,6 @@ void MainWindow::sendTileInformation(const Tile& tile)
 
 void MainWindow::sendTraversableInformation(const QString& str)
 {
-    std::cout << str.toStdString() << std::endl;
-
     bool isTraversable = false;
 
     if(!str.compare(QString("True"), Qt::CaseInsensitive)) {
@@ -137,48 +140,29 @@ void MainWindow::setTileSelectLayout(QScrollArea* scrollArea, QWidget* scrollAre
     int tileSheetRows = tileSheet.getRows();
 
     /* layout for scrollarea */
-    QGridLayout* layout = new QGridLayout(scrollArea);
-    //QWidget* scrollAreaWidgetContents = new QWidget(scrollArea);
+    QGridLayout* layout = new QGridLayout(scrollAreaContents);
 
     scrollAreaContents->setLayout(layout);
 
-    std::cout << std::to_string(scrollAreaContents->geometry().width()) << std::endl;
-    std::cout << std::to_string(scrollAreaContents->geometry().height()) << std::endl;
-
     int gridCols = std::floor(scrollArea->geometry().width() / mTileWidth);
     int gridRows = std::floor(scrollArea->geometry().height() / mTileHeight);
-
-    mSignalMapper = new QSignalMapper(this);
 
     for(int i = 0; i < tileSheetRows; ++i) {
         for(int j = 0; j < tileSheetCols; ++j) {
             int xOffset = (j*mTileWidth)+j;
             int yOffset = (i*mTileHeight)+i;
 
-            /* clip tilesheet to x, y, tilewidth, tileheight */
+            /* clip tilesheet to x, y, tilewidth, tileheight for tile icon*/
             QPixmap tile = tileSheet.getQtTileSheet().copy(xOffset, yOffset, mTileWidth, mTileHeight);
+
             /* create new push button */
-            JPushButton* button = new JPushButton(this);
+            JPushButton* button = new JPushButton(this, &tileSheet);
 
             button->setClipBounds(yOffset, xOffset, mTileWidth, mTileHeight);
 
-            /* when button is clicked, mSignalMapper->map() is called */
-            connect(button, SIGNAL(clicked()), mSignalMapper, SLOT(map()));
-
-            /* send package to canvas */
-            sf::Rect<int> subRect = button->getClipBounds();
-            QObject* package = new QObject();
-            QRect rect;
-            rect.setTop(subRect.top);
-            rect.setLeft(subRect.left);
-            rect.setWidth(subRect.width);
-            rect.setHeight(subRect.height);
-            package->setProperty("bounds", QVariant(rect));
-
-            mObjects.push_back(package);
-
-            /* let mSignalMapper know which action should pass which argument */
-            mSignalMapper->setMapping(button, mObjects.back());
+            /* connect tile selector to canvas */
+            connect(button, SIGNAL(clicked(const sf::Rect<int>&, std::shared_ptr<const TileSheet>)),
+                mSFMLView, SLOT(setCurrentTile(const sf::Rect<int>&, std::shared_ptr<const TileSheet>)));
 
             /* set button's icon */
             button->setIcon(QIcon(tile));
@@ -189,12 +173,6 @@ void MainWindow::setTileSelectLayout(QScrollArea* scrollArea, QWidget* scrollAre
             layout->addWidget(button, row, col, Qt::AlignCenter);
         }
     }
-
-    /*
-     * when mSignalMapper emits a SIGNAL(mapped(QObject*)),
-     * mSFMLView->setCurrentTileBounds(QObject*) gets called
-    */
-    //connect(mSignalMapper, SIGNAL(mapped(QObject*)), mSFMLView, SLOT(setCurrentTileBounds(QObject*)));
 }
 
 void MainWindow::setCurrentTileFrameLayout()
@@ -210,6 +188,11 @@ void MainWindow::setCurrentTileFrameLayout()
     layout->addWidget(ui->currentTileTileSheetCoords, 3, 0, 5, 5, Qt::AlignLeft);
     layout->addWidget(ui->traversableLabel, 4, 0, 5, 5, Qt::AlignLeft);
     layout->addWidget(ui->currentTileTraversable, 4, 1, 5, 5, Qt::AlignRight);
+}
+
+void MainWindow::setCurrentTileSheetIndex(int index)
+{
+    mTileSheetIndex = index;
 }
 
 void MainWindow::resizeCurrentTileFrame()
