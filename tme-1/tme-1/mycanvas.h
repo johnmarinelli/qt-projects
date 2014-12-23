@@ -63,7 +63,7 @@ signals:
 
 public slots:
     void setCurrentTileBounds(QObject* bounds);
-    void setCurrentTile(const sf::Rect<int>& bounds, std::shared_ptr<const TileSheet> tileSheet);
+    void setCurrentTile(const sf::Rect<int>& bounds, const std::shared_ptr<const TileSheet> tileSheet);
     void setCurrentTileSheetIndex(int index);
 
 private slots:

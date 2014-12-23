@@ -67,7 +67,7 @@ MainWindow::MainWindow(QWidget *parent) :
         scrollAreaContents->setGeometry(tabRect);
 
         /* set scroll area's layout */
-        this->setTileSelectLayout(scrollArea, scrollAreaContents, *(mTileSheetHandler.get(index).get()));
+        this->setTileSelectLayout(scrollArea, scrollAreaContents, mTileSheetHandler.get(index));
         ui->tileSheetTabs->addTab(tab, QString(std::to_string(index).c_str()));
     });
 
@@ -134,10 +134,10 @@ void MainWindow::sendTraversableInformation(const QString& str)
     mSFMLView->setCurrentTileTraversable(isTraversable);
 }
 
-void MainWindow::setTileSelectLayout(QScrollArea* scrollArea, QWidget* scrollAreaContents, const TileSheet& tileSheet)
+void MainWindow::setTileSelectLayout(QScrollArea* scrollArea, QWidget* scrollAreaContents, const std::shared_ptr<const TileSheet>& tileSheet)
 {
-    int tileSheetCols = tileSheet.getColumns();
-    int tileSheetRows = tileSheet.getRows();
+    int tileSheetCols = tileSheet->getColumns();
+    int tileSheetRows = tileSheet->getRows();
 
     /* layout for scrollarea */
     QGridLayout* layout = new QGridLayout(scrollAreaContents);
@@ -153,16 +153,16 @@ void MainWindow::setTileSelectLayout(QScrollArea* scrollArea, QWidget* scrollAre
             int yOffset = (i*mTileHeight)+i;
 
             /* clip tilesheet to x, y, tilewidth, tileheight for tile icon*/
-            QPixmap tile = tileSheet.getQtTileSheet().copy(xOffset, yOffset, mTileWidth, mTileHeight);
+            QPixmap tile = tileSheet->getQtTileSheet().copy(xOffset, yOffset, mTileWidth, mTileHeight);
 
             /* create new push button */
-            JPushButton* button = new JPushButton(this, &tileSheet);
+            JPushButton* button = new JPushButton(this, tileSheet);
 
             button->setClipBounds(yOffset, xOffset, mTileWidth, mTileHeight);
 
             /* connect tile selector to canvas */
-            connect(button, SIGNAL(clicked(const sf::Rect<int>&, std::shared_ptr<const TileSheet>)),
-                mSFMLView, SLOT(setCurrentTile(const sf::Rect<int>&, std::shared_ptr<const TileSheet>)));
+            connect(button, SIGNAL(clicked(const sf::Rect<int>&, const std::shared_ptr<const TileSheet>)),
+                mSFMLView, SLOT(setCurrentTile(const sf::Rect<int>&, const std::shared_ptr<const TileSheet>)));
 
             /* set button's icon */
             button->setIcon(QIcon(tile));

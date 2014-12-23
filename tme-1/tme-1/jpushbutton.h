@@ -14,16 +14,16 @@ private:
     typedef std::shared_ptr<const TileSheet> TileSheetPtr;
 
     sf::Rect<int> mClipBounds;
-    TileSheetPtr mTileSheetHandle;
+    const TileSheetPtr mTileSheetHandle;
 
 public:
-    explicit JPushButton(QWidget* parent, const TileSheet* tileSheetHandle);
+    explicit JPushButton(QWidget* parent, const TileSheetPtr tileSheetHandle);
 
     void setClipBounds(int top, int left, int width, int height);
     sf::Rect<int> getClipBounds();
 
 signals:
-    void clicked(const sf::Rect<int>& bounds, std::shared_ptr<const TileSheet> tileSheet);
+    void clicked(const sf::Rect<int>& bounds, const std::shared_ptr<const TileSheet> tileSheet);
 
 public slots:
 

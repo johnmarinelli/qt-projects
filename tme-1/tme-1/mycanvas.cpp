@@ -86,7 +86,7 @@ void MyCanvas::setCurrentTileBounds(QObject* bounds)
     mCurrentTileBounds.height = r.height();
 }
 
-void MyCanvas::setCurrentTile(const sf::Rect<int>& bounds, std::shared_ptr<const TileSheet> tileSheet)
+void MyCanvas::setCurrentTile(const sf::Rect<int>& bounds, const std::shared_ptr<const TileSheet> tileSheet)
 {
     mCurrentTileBounds = bounds;
     mTilesheet = tileSheet.get()->getSfTileSheet();

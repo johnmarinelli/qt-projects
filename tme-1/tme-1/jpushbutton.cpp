@@ -1,6 +1,6 @@
 #include "jpushbutton.h"
 
-JPushButton::JPushButton(QWidget *parent, const TileSheet* tileSheetHandle) :
+JPushButton::JPushButton(QWidget *parent, const TileSheetPtr tileSheetHandle) :
     QPushButton(parent),
     mTileSheetHandle(tileSheetHandle),
     mClipBounds(0, 0, 0, 0)
