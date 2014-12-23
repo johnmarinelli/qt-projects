@@ -12,9 +12,9 @@ MyCanvas::MyCanvas(QWidget *parent,
     mTileSheetHandler(tileSheetHandler),
     mTileSheetIndex(0),
     mSize(size),
+    mSelectedTile(nullptr),
     mColumns(std::ceil(size.width() / TILE_WIDTH)),
-    mRows(std::ceil(size.height() / TILE_HEIGHT)),
-    mSelectedTile(nullptr)
+    mRows(std::ceil(size.height() / TILE_HEIGHT))
 {
     /* vertical lines */
     for(int i = 0; i < mColumns; ++i) {
@@ -55,35 +55,9 @@ void MyCanvas::onUpdate()
         draw(line.mLine, 2, sf::Lines);
     }
 
-    /* for each different tilesheet
-    for(const auto& index : mTileSheets) {
-        unsigned short key = index.first;
-        auto tileSheet = mTileSheetHandler.get(key);
-
-        /* switch tilesheet
-        mTilesheet = tileSheet.get()->getSfTileSheet();
-
-        std::cout << std::to_string(mTileSheets.at(key).size()) << std::endl;
-
-        /* draw tiles associated with that tilesheet
-        for(const auto& tile : mTileSheets.at(key)) {
-            draw(tile.second.getSprite());
-        }
-    }*/
-
     for(const auto& tile : mTiles) {
         draw(tile.second.getSprite());
     }
-}
-
-void MyCanvas::setCurrentTileBounds(QObject* bounds)
-{
-    QRect r = bounds->property("bounds").toRect();
-
-    mCurrentTileBounds.left = r.left();
-    mCurrentTileBounds.top = r.top();
-    mCurrentTileBounds.width = r.width();
-    mCurrentTileBounds.height = r.height();
 }
 
 void MyCanvas::setCurrentTile(const sf::Rect<int>& bounds, const std::shared_ptr<const TileSheet> tileSheet)
@@ -125,24 +99,10 @@ void MyCanvas::mousePressEvent(QMouseEvent* event)
 
         sprite.setPosition(x, y);
 
-        Tile tile(sprite);
+        Tile tile(sprite, mTileSheetIndex);
         tile.setCoords(sf::Vector2i(x, y));
         tile.setTileSheetCoords(sf::Vector2i(mCurrentTileBounds.left, mCurrentTileBounds.top));
         tile.setDimensions(sf::Vector2i(TILE_WIDTH, TILE_HEIGHT));
-
-        /*
-        if(mTileSheets.find(mTileSheetIndex) != mTileSheets.end()) {
-            TilesMap tilesMap = mTileSheets.at(mTileSheetIndex);
-            tilesMap[coords] = tile;
-
-        }
-        else {
-            TilesMap tilesMap;
-            tilesMap[coords] = tile;
-            mTileSheets[mTileSheetIndex] = tilesMap;
-        }*/
-
-        //tilesFromSheet[coords] = tile;
 
         mTiles[coords] = tile;
         mSelectedTile = &(mTiles[coords]);

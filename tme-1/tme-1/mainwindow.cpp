@@ -1,6 +1,5 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "qsfmlrect.h"
 #include "utility.h"
 
 #include <QMessageBox>
@@ -17,10 +16,10 @@
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
-    mWindowWidth(0),
-    mWindowHeight(0),
+    ui(new Ui::MainWindow),
     mTileSheetIndex(0),
-    ui(new Ui::MainWindow)
+    mWindowWidth(0),
+    mWindowHeight(0)
 {
     ui->setupUi(this);
     this->setWindowState(Qt::WindowMaximized);
@@ -71,8 +70,6 @@ MainWindow::MainWindow(QWidget *parent) :
         ui->tileSheetTabs->addTab(tab, QString(std::to_string(index).c_str()));
     });
 
-//    mTileSheet = *(mTileSheetHandler.get(mTileSheetTabIndex));
-
     setCurrentTileFrameLayout();
 
     /* connect canvas to tile information frame */
@@ -98,7 +95,7 @@ void MainWindow::sendTileInformation(const Tile& tile)
     int destHeight = ui->currentTileGraphic->geometry().height();
 
     /* clip tilesheet to x, y, tilewidth, tileheight */
-    QPixmap gfx = mTileSheetHandler.get(mTileSheetIndex)->getQtTileSheet().copy(xOffset, yOffset, tileWidth, tileHeight)
+    QPixmap gfx = mTileSheetHandler.get(tile.getTileSheetIndex())->getQtTileSheet().copy(xOffset, yOffset, tileWidth, tileHeight)
                     .scaled(QSize(destWidth, destHeight), Qt::IgnoreAspectRatio);
 
     ui->currentTileGraphic->setPixmap(gfx);

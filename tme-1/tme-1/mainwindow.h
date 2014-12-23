@@ -45,11 +45,8 @@ private:
     QFrame* mSFMLFrame;
     MyCanvas* mSFMLView;
 
-    TileSheet mTileSheet;
     TileSheetHandler mTileSheetHandler;
     unsigned short mTileSheetIndex;
-
-    std::vector<JPushButton*> mPushButtons;
 
     const int mTileWidth = 32;
     const int mTileHeight = 32;

@@ -2,7 +2,6 @@
 #define MYCANVAS_H
 
 #include "qsfmlcanvas.h"
-#include "qsfmlrect.h"
 #include "line.h"
 #include "tile.h"
 #include "tilesheethandler.h"
@@ -62,7 +61,6 @@ signals:
     void clicked(const Tile& tile);
 
 public slots:
-    void setCurrentTileBounds(QObject* bounds);
     void setCurrentTile(const sf::Rect<int>& bounds, const std::shared_ptr<const TileSheet> tileSheet);
     void setCurrentTileSheetIndex(int index);
 

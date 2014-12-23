@@ -19,7 +19,7 @@ T1 getNearestMultiple(const T1& actual, const T2& multiple)
 /*
  * bool to string
  */
-inline const char* const boolToString(const bool b)
+inline const char* const boolToString(bool b)
 {
     return b ? "True" : "False";
 }

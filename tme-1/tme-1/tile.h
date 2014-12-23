@@ -4,7 +4,7 @@
 #include <SFML/Graphics.hpp>
 
 /*
- * class for physica representation of tile
+ * class for physical representation of tile
  */
 class Tile
 {
@@ -13,6 +13,9 @@ private:
 
     /* map coordinates */
     sf::Vector2i mCoords;
+
+    /* index for TileSheetHandler */
+    unsigned short mTileSheetIndex;
 
     /* coordinates on tile sheet */
     sf::Vector2i mTileSheetCoords;
@@ -23,7 +26,7 @@ private:
 
 public:
     Tile();
-    explicit Tile(sf::Sprite sprite);
+    explicit Tile(sf::Sprite sprite, unsigned short tileSheetIndex);
     /*
      * TODO:
      * move semantics
@@ -34,6 +37,7 @@ public:
     const sf::Vector2i& getTileSheetCoords() const;
     const sf::Vector2i& getDimensions() const;
     bool getTraversable() const;
+    unsigned short getTileSheetIndex() const;
 
     void setCoords(const sf::Vector2i& coords);
     void setTileSheetCoords(const sf::Vector2i& tileSheetCoords);

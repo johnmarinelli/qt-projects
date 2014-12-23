@@ -2,12 +2,14 @@
 #include <iostream>
 
 Tile::Tile()
-    : mTraversable(true)
+    : mTileSheetIndex(0),
+      mTraversable(true)
 {
 }
 
-Tile::Tile(sf::Sprite sprite)
+Tile::Tile(sf::Sprite sprite, unsigned short tileSheetIndex)
     : mSprite(sprite),
+      mTileSheetIndex(tileSheetIndex),
       mTraversable(true)
 {
 }
@@ -35,6 +37,11 @@ const sf::Vector2i& Tile::getDimensions() const
 bool Tile::getTraversable() const
 {
     return mTraversable;
+}
+
+unsigned short Tile::getTileSheetIndex() const
+{
+    return mTileSheetIndex;
 }
 
 void Tile::setCoords(const sf::Vector2i& coords)
