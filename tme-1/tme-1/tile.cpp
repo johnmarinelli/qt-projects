@@ -7,11 +7,17 @@ Tile::Tile()
 {
 }
 
-Tile::Tile(sf::Sprite sprite, unsigned short tileSheetIndex)
-    : mSprite(sprite),
+Tile::Tile(const sf::Texture& tileSheet,
+           unsigned short tileSheetIndex,
+           const sf::Rect<int>& tileSheetBounds,
+           const sf::Vector2i& coords)
+    : mSprite(tileSheet, tileSheetBounds),
+      mCoords(coords),
       mTileSheetIndex(tileSheetIndex),
+      mTileSheetCoords(tileSheetBounds.left, tileSheetBounds.top),
       mTraversable(true)
 {
+    mSprite.setPosition(coords.x, coords.y);
 }
 
 const sf::Sprite& Tile::getSprite() const

@@ -26,7 +26,10 @@ private:
 
 public:
     Tile();
-    explicit Tile(sf::Sprite sprite, unsigned short tileSheetIndex);
+    explicit Tile(const sf::Texture& tileSheet,
+                  unsigned short tileSheetIndex,
+                  const sf::Rect<int>& tileSheetCoords,
+                  const sf::Vector2i& coords);
     /*
      * TODO:
      * move semantics

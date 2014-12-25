@@ -91,15 +91,8 @@ void MyCanvas::mousePressEvent(QMouseEvent* event)
 
     if(event->button() & Qt::LeftButton) {
         /* place tile at snapped point */
-        sf::Sprite sprite;
-        mTilesheet = mTileSheetHandler.get(mTileSheetIndex)->getSfTileSheet();
+        Tile tile(mTileSheetHandler.get(mTileSheetIndex)->getSfTileSheet(), mTileSheetIndex, mCurrentTileBounds, coords);
 
-        sprite.setTexture(mTileSheetHandler.get(mTileSheetIndex)->getSfTileSheet());
-        sprite.setTextureRect(mCurrentTileBounds);
-
-        sprite.setPosition(x, y);
-
-        Tile tile(sprite, mTileSheetIndex);
         tile.setCoords(sf::Vector2i(x, y));
         tile.setTileSheetCoords(sf::Vector2i(mCurrentTileBounds.left, mCurrentTileBounds.top));
         tile.setDimensions(sf::Vector2i(TILE_WIDTH, TILE_HEIGHT));
