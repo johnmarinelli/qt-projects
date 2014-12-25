@@ -27,9 +27,12 @@ public:
 
     void setTileSelectLayout(QScrollArea* scrollArea, QWidget* scrollAreaContents, const std::shared_ptr<const TileSheet>& tileSheet);
     void setCurrentTileFrameLayout();
+
     void resizeCurrentTileFrame();
     void resizeTileSelect();
     void resizeSFMLFrame();
+    void setCanvasScrollAreaLayout();
+    void resizeCanvasScrollArea();
 
     ~MainWindow();
 
@@ -42,7 +45,6 @@ private:
     Ui::MainWindow *ui;
 
     QFrame* mInputFrame;
-    QFrame* mSFMLFrame;
     MyCanvas* mSFMLView;
 
     TileSheetHandler mTileSheetHandler;

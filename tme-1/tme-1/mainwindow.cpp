@@ -31,10 +31,12 @@ MainWindow::MainWindow(QWidget *parent) :
     resizeTileSelect();
     resizeSFMLFrame();
 
-    mSFMLFrame = ui->SFMLFrame;
-    mSFMLView = new MyCanvas(mSFMLFrame, QPoint(0,0),
-                             QSize(mSFMLFrame->geometry().width(), mSFMLFrame->geometry().height()),
+    mSFMLView = new MyCanvas(ui->canvasScrollAreaWidgetContents, QPoint(0,0),
+                             QSize(ui->SFMLFrame->geometry().width(), ui->SFMLFrame->geometry().height()),
                              mTileSheetHandler);
+
+    setCanvasScrollAreaLayout();
+    resizeCanvasScrollArea();
 
     /* add all tilesheets to mTileSheetHandler */
     QDir assetsDir("../tme-1/assets");
@@ -138,7 +140,6 @@ void MainWindow::setTileSelectLayout(QScrollArea* scrollArea, QWidget* scrollAre
 
     /* layout for scrollarea */
     QGridLayout* layout = new QGridLayout(scrollAreaContents);
-
     scrollAreaContents->setLayout(layout);
 
     int gridCols = std::floor(scrollArea->geometry().width() / mTileWidth);
@@ -209,6 +210,31 @@ void MainWindow::resizeSFMLFrame()
     int width = mWindowWidth - tabViewRect.width();
 
     ui->SFMLFrame->setGeometry(x, 0, width, mWindowHeight);
+}
+
+/*
+ * canvas scroll area design depends on mSFMLView
+ */
+void MainWindow::setCanvasScrollAreaLayout()
+{
+    ui->canvasScrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+    ui->canvasScrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+
+    QGridLayout* layout = new QGridLayout(ui->canvasScrollAreaWidgetContents);
+    ui->canvasScrollAreaWidgetContents->setLayout(layout);
+    ui->canvasScrollArea->setWidgetResizable(false);
+    layout->addWidget(mSFMLView, 0, 0);
+}
+
+void MainWindow::resizeCanvasScrollArea()
+{
+    QRect SFMLFrameRect = ui->SFMLFrame->geometry();
+
+    /* size of actual scroll area */
+    ui->canvasScrollArea->setGeometry(0, 0, SFMLFrameRect.width(), SFMLFrameRect.height() - 50);
+
+    /* size of scroll area contents; determines scroll bars */
+    ui->canvasScrollAreaWidgetContents->setGeometry(mSFMLView->geometry());
 }
 
 MainWindow::~MainWindow()
