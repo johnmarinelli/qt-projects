@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "newmapdialog.h"
 #include "utility.h"
 
 #include <QMessageBox>
@@ -84,6 +85,9 @@ MainWindow::MainWindow(QWidget *parent) :
     /* connect tab switching to change mTileSheet */
     connect(ui->tileSheetTabs, SIGNAL(currentChanged(int)), mSFMLView, SLOT(setCurrentTileSheetIndex(int)));
     connect(ui->tileSheetTabs, SIGNAL(currentChanged(int)), this, SLOT(setCurrentTileSheetIndex(int)));
+
+    /* connect new file option to new map dialog */
+    connect(ui->newMapAction, SIGNAL(triggered()), this, SLOT(showNewMapDialog()));
 }
 
 void MainWindow::sendTileInformation(const Tile& tile)
@@ -186,6 +190,30 @@ void MainWindow::setCurrentTileFrameLayout()
     layout->addWidget(ui->currentTileTileSheetCoords, 3, 0, 5, 5, Qt::AlignLeft);
     layout->addWidget(ui->traversableLabel, 4, 0, 5, 5, Qt::AlignLeft);
     layout->addWidget(ui->currentTileTraversable, 4, 1, 5, 5, Qt::AlignRight);
+}
+
+void MainWindow::showNewMapDialog()
+{
+    /* start new map dialog */
+    NewMapDialog* nmd = new NewMapDialog(this);
+    nmd->show();
+
+    connect(nmd, SIGNAL(makeNew(std::tuple<int,int>)), this, SLOT(makeNewMap(std::tuple<int, int>)));
+}
+
+void MainWindow::makeNewMap(std::tuple<int, int> params)
+{
+    /*
+     * width, height: ints
+     */
+    auto width = std::get<0>(params);
+    auto height = std::get<1>(params);
+
+    auto rect = mSFMLView->geometry();
+
+    /*
+     * todo: create a new map & connect it appropriately
+     */
 }
 
 void MainWindow::setCurrentTileSheetIndex(int index)

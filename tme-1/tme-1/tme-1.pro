@@ -24,7 +24,8 @@ SOURCES += main.cpp\
     line.cpp \
     tile.cpp \
     tilesheet.cpp \
-    tilesheethandler.cpp
+    tilesheethandler.cpp \
+    newmapdialog.cpp
 
 HEADERS  += mainwindow.h \
     qsfmlcanvas.h \
@@ -35,7 +36,8 @@ HEADERS  += mainwindow.h \
     line.h \
     tile.h \
     tilesheet.h \
-    tilesheethandler.h
+    tilesheethandler.h \
+    newmapdialog.h
 
 FORMS    += \
     mainwindow.ui

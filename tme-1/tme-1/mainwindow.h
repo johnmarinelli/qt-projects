@@ -40,6 +40,8 @@ private slots:
     void sendTileInformation(const Tile& tile);
     void sendTraversableInformation(const QString& str);
     void setCurrentTileSheetIndex(int index);
+    void showNewMapDialog();
+    void makeNewMap(std::tuple<int, int> params);
 
 private:
     Ui::MainWindow *ui;

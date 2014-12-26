@@ -166,8 +166,23 @@
      <string>Tilemap Editor 0.1</string>
     </property>
    </widget>
+   <widget class="QMenu" name="menuFile">
+    <property name="title">
+     <string>File</string>
+    </property>
+    <addaction name="newMapAction"/>
+   </widget>
    <addaction name="menuTilemap_Editor_1"/>
+   <addaction name="menuFile"/>
   </widget>
+  <action name="newMapAction">
+   <property name="text">
+    <string>New Map</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+N</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources/>
