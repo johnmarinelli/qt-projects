@@ -30,9 +30,9 @@ public:
 
     void resizeCurrentTileFrame();
     void resizeTileSelect();
-    void resizeSFMLFrame();
-    void setCanvasScrollAreaLayout();
-    void resizeCanvasScrollArea();
+    void resizeSFMLFrame(QFrame* frame);
+    void setCanvasScrollAreaLayout(QScrollArea* scrollArea, QWidget* scrollAreaWidgetContents);
+    void resizeCanvasScrollArea(QFrame* frame, QScrollArea* scrollArea, QWidget* scrollAreaWidget);
 
     ~MainWindow();
 
@@ -44,6 +44,9 @@ private slots:
     void makeNewMap(std::tuple<int, int> params);
 
 private:
+
+    void createNewCanvasArea(int width=0, int height=0);
+
     Ui::MainWindow *ui;
 
     QFrame* mInputFrame;

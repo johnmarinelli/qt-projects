@@ -89,15 +89,21 @@ void MyCanvas::reset()
     mSelectedTile = nullptr;
     mTileSheetIndex = 0;
     mCurrentTileBounds = sf::Rect<int>();
-
-    this->resize(0, 0);
     this->move(0, 0);
+    this->resize(0, 0);
 }
 
 void MyCanvas::setTileDimensions(int tileWidth, int tileHeight)
 {
     mTileMap.setTileWidth(tileWidth);
     mTileMap.setTileHeight(tileHeight);
+}
+
+void MyCanvas::setDimensions(int width, int height)
+{
+    mTileMap.setWidth(width);
+    mTileMap.setHeight(height);
+    this->resize(width, height);
 }
 
 void MyCanvas::setCurrentTileSheetIndex(int index)
@@ -110,8 +116,8 @@ void MyCanvas::mousePressEvent(QMouseEvent* event)
     int x = event->pos().x();
     int y = event->pos().y();
 
-    std::cout << std::to_string(x) << std::endl;
-    std::cout << std::to_string(y) << std::endl;
+    std::cout << "clicked x " << std::to_string(x) << std::endl;
+    std::cout << "clicked y " << std::to_string(y) << std::endl;
 
     int tileWidth = mTileMap.getTileWidth();
     int tileHeight = mTileMap.getTileHeight();
@@ -149,4 +155,9 @@ void MyCanvas::mousePressEvent(QMouseEvent* event)
     }
 
     emit clicked();
+}
+
+QSize MyCanvas::sizeHint() const
+{
+    return QSize(mTileMap.getWidth(), mTileMap.getHeight());
 }

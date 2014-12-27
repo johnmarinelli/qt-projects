@@ -64,6 +64,9 @@ public:
     void setCurrentTileTraversable(bool traversable);
     void reset();
     void setTileDimensions(int tileWidth, int tileHeight);
+    void setDimensions(int width, int height);
+
+    QSize sizeHint() const;
 
 signals:
     void clicked();
