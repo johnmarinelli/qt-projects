@@ -52,8 +52,8 @@ private:
     TileSheetHandler mTileSheetHandler;
     unsigned short mTileSheetIndex;
 
-    const int mTileWidth = 32;
-    const int mTileHeight = 32;
+    int mTileWidth;
+    int mTileHeight;
 
     int mWindowWidth;
     int mWindowHeight;

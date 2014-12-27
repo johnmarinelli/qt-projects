@@ -5,6 +5,7 @@
 #include "line.h"
 #include "tile.h"
 #include "tilesheethandler.h"
+#include "tilemap.h"
 
 #include <iostream>
 #include <unordered_map>
@@ -32,29 +33,37 @@ private:
     void onUpdate();
 
     typedef std::unordered_map<sf::Vector2<int>, Tile, Vector2iHash> TilesMap;
-    typedef std::map<unsigned short, TilesMap> TileSheetsMap;
 
     sf::Texture mTilesheet;
-    std::unordered_map<sf::Vector2i, Tile, Vector2iHash> mTiles;
+    TilesMap mTiles;
 
+    /*
+     * Canvas needs a reference to TileSheetHandler to determine
+     * which tilesheet to use when drawing tiles.
+     */
     const TileSheetHandler& mTileSheetHandler;
-    TileSheetsMap mTileSheets;
     unsigned short mTileSheetIndex;
 
     Tile* mSelectedTile;
 
     sf::Rect<int> mCurrentTileBounds;
 
-    QSize mSize;
-    int mRows;
-    int mColumns;
-
     std::vector<Line> mGridLines;
 
-public:
-    MyCanvas(QWidget *parent, const QPoint& position, const QSize& size, const TileSheetHandler& tileSheetHandler);
+    TileMap mTileMap;
 
+public:
+    MyCanvas(QWidget *parent,
+             const QPoint& position,
+             const QSize& size,
+             const TileSheetHandler& tileSheetHandler,
+             const int tileWidth,
+             const int tileHeight);
+
+    void setLines();
     void setCurrentTileTraversable(bool traversable);
+    void reset();
+    void setTileDimensions(int tileWidth, int tileHeight);
 
 signals:
     void clicked();

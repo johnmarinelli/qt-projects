@@ -30,10 +30,6 @@ public:
                   unsigned short tileSheetIndex,
                   const sf::Rect<int>& tileSheetCoords,
                   const sf::Vector2i& coords);
-    /*
-     * TODO:
-     * move semantics
-     */
 
     const sf::Sprite& getSprite() const;
     const sf::Vector2i& getCoords() const;

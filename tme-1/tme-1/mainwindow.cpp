@@ -19,6 +19,8 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
     mTileSheetIndex(0),
+    mTileWidth(DEFAULT_TILE_WIDTH),
+    mTileHeight(DEFAULT_TILE_HEIGHT),
     mWindowWidth(0),
     mWindowHeight(0)
 {
@@ -34,7 +36,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
     mSFMLView = new MyCanvas(ui->canvasScrollAreaWidgetContents, QPoint(0,0),
                              QSize(ui->SFMLFrame->geometry().width(), ui->SFMLFrame->geometry().height()),
-                             mTileSheetHandler);
+                             mTileSheetHandler,
+                             mTileWidth, mTileHeight);
 
     setCanvasScrollAreaLayout();
     resizeCanvasScrollArea();
@@ -209,11 +212,21 @@ void MainWindow::makeNewMap(std::tuple<int, int> params)
     auto width = std::get<0>(params);
     auto height = std::get<1>(params);
 
-    auto rect = mSFMLView->geometry();
+    auto rect = ui->SFMLFrame->geometry();
 
     /*
      * todo: create a new map & connect it appropriately
      */
+    mSFMLView->reset();
+
+    mSFMLView->setTileDimensions(DEFAULT_TILE_WIDTH, DEFAULT_TILE_HEIGHT);
+    mSFMLView->resize(width, height);
+    mSFMLView->setLines();
+
+    setCanvasScrollAreaLayout();
+    //resizeCanvasScrollArea();
+
+    std::cout << mSFMLView->size().width() << std::endl;
 }
 
 void MainWindow::setCurrentTileSheetIndex(int index)
@@ -248,6 +261,8 @@ void MainWindow::setCanvasScrollAreaLayout()
     ui->canvasScrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
     ui->canvasScrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
 
+    removeLayout(ui->canvasScrollAreaWidgetContents->layout());
+
     QGridLayout* layout = new QGridLayout(ui->canvasScrollAreaWidgetContents);
     ui->canvasScrollAreaWidgetContents->setLayout(layout);
     ui->canvasScrollArea->setWidgetResizable(false);
@@ -262,7 +277,7 @@ void MainWindow::resizeCanvasScrollArea()
     ui->canvasScrollArea->setGeometry(0, 0, SFMLFrameRect.width(), SFMLFrameRect.height() - 50);
 
     /* size of scroll area contents; determines scroll bars */
-    ui->canvasScrollAreaWidgetContents->setGeometry(mSFMLView->geometry());
+     ui->canvasScrollAreaWidgetContents->resize(mSFMLView->size());
 }
 
 MainWindow::~MainWindow()

@@ -7,35 +7,45 @@
 MyCanvas::MyCanvas(QWidget *parent,
                    const QPoint& position,
                    const QSize& size,
-                   const TileSheetHandler& tileSheetHandler) :
+                   const TileSheetHandler& tileSheetHandler,
+                   const int tileWidth,
+                   const int tileHeight) :
     QSFMLCanvas(parent, position, size),
     mTileSheetHandler(tileSheetHandler),
     mTileSheetIndex(0),
-    mSize(size),
     mSelectedTile(nullptr),
-    mColumns(std::ceil(size.width() / TILE_WIDTH)),
-    mRows(std::ceil(size.height() / TILE_HEIGHT))
+    mTileMap(tileWidth, tileHeight, size.width(), size.height())
 {
+    setLines();
+
+    /* remap our normal clicked() function to our slot, sendSelectedTile */
+    connect(this, SIGNAL(clicked()), this, SLOT(sendSelectedTile()));
+}
+
+void MyCanvas::setLines()
+{
+    int columns = std::ceil(this->size().width() / mTileMap.getTileWidth());
+    int rows = std::ceil(this->size().height() / mTileMap.getTileHeight());
+
+    //QSize size(this->geometry().width(), this->geometry().height());
+    QSize size = this->size();
+
     /* vertical lines */
-    for(int i = 0; i < mColumns; ++i) {
-        int x = i * TILE_WIDTH;
+    for(int i = 0; i < columns; ++i) {
+        int x = i * mTileMap.getTileHeight();
         Line line(x, 0, x, size.height());
         line.mLine[0].color = sf::Color::Black;
         mGridLines.push_back(line);
     }
 
     /* horizontal lines */
-    for(int j = 0; j < mRows; ++j) {
-        int y = j * TILE_WIDTH;
+    for(int j = 0; j < rows; ++j) {
+        int y = j * mTileMap.getTileWidth();
         Line line(0, y, size.width(), y);
         line.mLine[0].color = sf::Color::Black;
         mGridLines.push_back(line);
     }
-
-    /* remap our normal clicked() function to our slot, sendSelectedTile */
-    connect(this, SIGNAL(clicked()), this, SLOT(sendSelectedTile()));
 }
-
 
 void MyCanvas::sendSelectedTile()
 {
@@ -71,6 +81,25 @@ void MyCanvas::setCurrentTileTraversable(bool traversable)
     if(mSelectedTile) mSelectedTile->setTraversable(traversable);
 }
 
+void MyCanvas::reset()
+{
+    mTileMap.reset();
+    mGridLines.clear();
+    mTiles.clear();
+    mSelectedTile = nullptr;
+    mTileSheetIndex = 0;
+    mCurrentTileBounds = sf::Rect<int>();
+
+    this->resize(0, 0);
+    this->move(0, 0);
+}
+
+void MyCanvas::setTileDimensions(int tileWidth, int tileHeight)
+{
+    mTileMap.setTileWidth(tileWidth);
+    mTileMap.setTileHeight(tileHeight);
+}
+
 void MyCanvas::setCurrentTileSheetIndex(int index)
 {
     mTileSheetIndex = index;
@@ -81,8 +110,14 @@ void MyCanvas::mousePressEvent(QMouseEvent* event)
     int x = event->pos().x();
     int y = event->pos().y();
 
-    x = getNearestMultiple(x, TILE_WIDTH);
-    y = getNearestMultiple(y, TILE_HEIGHT);
+    std::cout << std::to_string(x) << std::endl;
+    std::cout << std::to_string(y) << std::endl;
+
+    int tileWidth = mTileMap.getTileWidth();
+    int tileHeight = mTileMap.getTileHeight();
+
+    x = getNearestMultiple(x, tileWidth);
+    y = getNearestMultiple(y, tileHeight);
 
     sf::Vector2i coords(x, y);
 
@@ -91,21 +126,25 @@ void MyCanvas::mousePressEvent(QMouseEvent* event)
 
     if(event->button() & Qt::LeftButton) {
         /* place tile at snapped point */
-        Tile tile(mTileSheetHandler.get(mTileSheetIndex)->getSfTileSheet(), mTileSheetIndex, mCurrentTileBounds, coords);
+        Tile tile(mTileSheetHandler.get(mTileSheetIndex)->getSfTileSheet(),
+                  mTileSheetIndex,
+                  mCurrentTileBounds,
+                  coords);
 
-        tile.setCoords(sf::Vector2i(x, y));
         tile.setTileSheetCoords(sf::Vector2i(mCurrentTileBounds.left, mCurrentTileBounds.top));
-        tile.setDimensions(sf::Vector2i(TILE_WIDTH, TILE_HEIGHT));
+        tile.setDimensions(sf::Vector2i(tileWidth, tileHeight));
 
         mTiles[coords] = tile;
         mSelectedTile = &(mTiles[coords]);
+        mTileMap.addTile(mTiles[coords]);
     }
 
     else if(event->button() & Qt::RightButton) {
         /* select tile */
         if(tile != mTiles.end()) {
-            //mTiles.erase(tile);
-            mSelectedTile = &(tile->second);
+            //mSelectedTile = &(tile->second);
+            mTileMap.removeTile(&(tile->second));
+            mTiles.erase(tile);
         }
     }
 
