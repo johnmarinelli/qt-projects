@@ -29,6 +29,15 @@ std::shared_ptr<TileSheet> TileSheetHandler::get(unsigned short key) const
     else return nullptr;
 }
 
+std::vector<std::shared_ptr<TileSheet> > TileSheetHandler::getTileSheets() const
+{
+    std::vector<std::shared_ptr<TileSheet> > tilesheets;
+    for(const auto& kv : mTileSheets) {
+        tilesheets.push_back(kv.second);
+    }
+    return tilesheets;
+}
+
 bool TileSheetHandler::remove(unsigned short key)
 {
     auto ts = mTileSheets.find(key);

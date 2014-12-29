@@ -3,6 +3,7 @@
 
 #include <memory>
 #include <map>
+#include <vector>
 #include "tilesheet.h"
 
 /*
@@ -24,6 +25,7 @@ public:
 
     unsigned short add(const std::string& path, const QSize& tileSize);
     std::shared_ptr<TileSheet> get(unsigned short key) const;
+    std::vector<std::shared_ptr<TileSheet>> getTileSheets() const;
     bool remove(unsigned short key);
 
 };

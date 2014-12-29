@@ -45,6 +45,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
         /* add a new tab with scroll area */
         QWidget* tab = new QWidget(ui->tileSheetTabs);
+        tab->setObjectName("tileSheetTab");
         QRect tabViewRect = ui->tileSheetTabs->geometry();
 
         /* add tab's layout */
@@ -65,7 +66,7 @@ MainWindow::MainWindow(QWidget *parent) :
         scrollAreaContents->setGeometry(tabRect);
 
         /* set scroll area's layout */
-        this->setTileSelectLayout(scrollArea, scrollAreaContents, mTileSheetHandler.get(index));
+        setTileSelectLayout(scrollArea, scrollAreaContents, mTileSheetHandler.get(index));
         ui->tileSheetTabs->addTab(tab, QString(std::to_string(index).c_str()));
     });
 
@@ -116,17 +117,11 @@ void MainWindow::createNewCanvasArea(int width, int height)
     }
     else {
         QFrame* frame = this->findChild<QFrame*> ("SFMLFrame");
-        QScrollArea* scrollArea = this->findChild<QScrollArea*> ("SFMLScrollArea");
-        QWidget* scrollAreaWidget = this->findChild<QWidget*> ("SFMLScrollAreaWidget");
 
+        delete mSFMLView;
+        mSFMLView = nullptr;
         delete frame;
         frame = nullptr;
-        /*delete scrollArea;
-        scrollArea = nullptr;
-        delete scrollAreaWidget;
-        scrollAreaWidget = nullptr;
-        delete mSFMLView;
-        mSFMLView = nullptr;*/
 
         QFrame* sfmlFrame = new QFrame(this);
         QScrollArea* sfmlScrollArea = new QScrollArea(sfmlFrame);
@@ -137,19 +132,53 @@ void MainWindow::createNewCanvasArea(int width, int height)
         sfmlScrollArea->setObjectName("SFMLScrollArea");
         sfmlScrollAreaWidget->setObjectName("SFMLScrollAreaWidget");
 
+        sfmlFrame->show();
+        sfmlScrollArea->show();
+        sfmlScrollAreaWidget->show();
+
         resizeSFMLFrame(sfmlFrame);
 
+        sfmlScrollArea->resize(width, height);
+        sfmlScrollAreaWidget->resize(width, height);
+
         mSFMLView = new MyCanvas(sfmlScrollAreaWidget, QPoint(0,0),
-                                 QSize(sfmlFrame->geometry().width(), sfmlFrame->geometry().height()),
+                                 QSize(width, height),
+                                 //QSize(sfmlFrame->geometry().width(), sfmlFrame->geometry().height()),
                                  mTileSheetHandler,
                                  mTileWidth, mTileHeight);
+
         mSFMLView->setObjectName("Canvas");
+        mSFMLView->show();
 
         setCanvasScrollAreaLayout(sfmlScrollArea, sfmlScrollAreaWidget);
         resizeCanvasScrollArea(sfmlFrame, sfmlScrollArea, sfmlScrollAreaWidget);
+
+        std::cout << sfmlFrame->size().width() << std::endl;
+        std::cout << sfmlScrollArea->size().width() << std::endl;
+        std::cout << sfmlScrollAreaWidget->size().width() << std::endl;
+        std::cout << mSFMLView->size().width() << std::endl;
     }
 
+    /* wire up buttons to canvas */
+    //QList<JPushButton*> buttons = ui->tileSheetTabs->find
 
+
+
+    //connect(button, SIGNAL(clicked(const sf::Rect<int>&, const std::shared_ptr<const TileSheet>)),
+    //    mSFMLView, SLOT(setCurrentTile(const sf::Rect<int>&, const std::shared_ptr<const TileSheet>)));
+
+    auto tabs = this->findChildren<QWidget*> ("tileSheetTab");
+    //std::cout << "tabs: " << tabs.size() << std::endl;
+
+    for(const auto& tab : tabs) {
+        auto buttons = tab->findChildren<JPushButton*> ("tileSelectButton");
+        //std::cout << "buttons: " << buttons.size() << std::endl;
+
+        for(const auto& button: buttons) {
+            connect(button, SIGNAL(clicked(const sf::Rect<int>&, const std::shared_ptr<const TileSheet>)),
+                mSFMLView, SLOT(setCurrentTile(const sf::Rect<int>&, const std::shared_ptr<const TileSheet>)));
+        }
+    }
 }
 
 void MainWindow::sendTileInformation(const Tile& tile)
@@ -221,6 +250,7 @@ void MainWindow::setTileSelectLayout(QScrollArea* scrollArea, QWidget* scrollAre
 
             /* create new push button */
             JPushButton* button = new JPushButton(this, tileSheet);
+            button->setObjectName("tileSelectButton");
 
             button->setClipBounds(yOffset, xOffset, mTileWidth, mTileHeight);
 

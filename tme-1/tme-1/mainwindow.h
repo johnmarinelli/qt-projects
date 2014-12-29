@@ -45,6 +45,7 @@ private slots:
 
 private:
 
+    void setTileSelectButtons();
     void createNewCanvasArea(int width=0, int height=0);
 
     Ui::MainWindow *ui;
@@ -60,7 +61,6 @@ private:
 
     int mWindowWidth;
     int mWindowHeight;
-
 };
 
 #endif // MAINWINDOW_H
