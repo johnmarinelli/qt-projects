@@ -91,37 +91,65 @@ MainWindow::MainWindow(QWidget *parent) :
  */
 void MainWindow::createNewCanvasArea(int width, int height)
 {
-    /*
-     * todo: when creating a new canvas area,
-     * delete these
-     * or
-     * insert a tabview and have multiple maps open
-     */
-    QFrame* sfmlFrame = new QFrame(this);
-    QScrollArea* sfmlScrollArea = new QScrollArea(sfmlFrame);
-    QWidget* sfmlScrollAreaWidget = new QWidget(sfmlScrollArea);
-    sfmlScrollArea->setWidget(sfmlScrollAreaWidget);
-
-    resizeSFMLFrame(sfmlFrame);
-
-    std::cout << sfmlFrame->pos().y() << std::endl;
-
     if(nullptr == mSFMLView) {
+        QFrame* sfmlFrame = new QFrame(this);
+        QScrollArea* sfmlScrollArea = new QScrollArea(sfmlFrame);
+        QWidget* sfmlScrollAreaWidget = new QWidget(sfmlScrollArea);
+        sfmlScrollArea->setWidget(sfmlScrollAreaWidget);
+
+        sfmlFrame->setObjectName("SFMLFrame");
+        sfmlScrollArea->setObjectName("SFMLScrollArea");
+        sfmlScrollAreaWidget->setObjectName("SFMLScrollAreaWidget");
+
+        resizeSFMLFrame(sfmlFrame);
+
+        std::cout << sfmlFrame->pos().y() << std::endl;
+
         mSFMLView = new MyCanvas(sfmlScrollAreaWidget, QPoint(0,0),
                                  QSize(sfmlFrame->geometry().width(), sfmlFrame->geometry().height()),
                                  mTileSheetHandler,
                                  mTileWidth, mTileHeight);
+        mSFMLView->setObjectName("Canvas");
+
+        setCanvasScrollAreaLayout(sfmlScrollArea, sfmlScrollAreaWidget);
+        resizeCanvasScrollArea(sfmlFrame, sfmlScrollArea, sfmlScrollAreaWidget);
     }
     else {
-        mSFMLView->reset();
+        QFrame* frame = this->findChild<QFrame*> ("SFMLFrame");
+        QScrollArea* scrollArea = this->findChild<QScrollArea*> ("SFMLScrollArea");
+        QWidget* scrollAreaWidget = this->findChild<QWidget*> ("SFMLScrollAreaWidget");
 
-        mSFMLView->setTileDimensions(DEFAULT_TILE_WIDTH, DEFAULT_TILE_HEIGHT);
-        mSFMLView->setDimensions(width, height);
-        mSFMLView->setLines();
+        delete frame;
+        frame = nullptr;
+        /*delete scrollArea;
+        scrollArea = nullptr;
+        delete scrollAreaWidget;
+        scrollAreaWidget = nullptr;
+        delete mSFMLView;
+        mSFMLView = nullptr;*/
+
+        QFrame* sfmlFrame = new QFrame(this);
+        QScrollArea* sfmlScrollArea = new QScrollArea(sfmlFrame);
+        QWidget* sfmlScrollAreaWidget = new QWidget(sfmlScrollArea);
+        sfmlScrollArea->setWidget(sfmlScrollAreaWidget);
+
+        sfmlFrame->setObjectName("SFMLFrame");
+        sfmlScrollArea->setObjectName("SFMLScrollArea");
+        sfmlScrollAreaWidget->setObjectName("SFMLScrollAreaWidget");
+
+        resizeSFMLFrame(sfmlFrame);
+
+        mSFMLView = new MyCanvas(sfmlScrollAreaWidget, QPoint(0,0),
+                                 QSize(sfmlFrame->geometry().width(), sfmlFrame->geometry().height()),
+                                 mTileSheetHandler,
+                                 mTileWidth, mTileHeight);
+        mSFMLView->setObjectName("Canvas");
+
+        setCanvasScrollAreaLayout(sfmlScrollArea, sfmlScrollAreaWidget);
+        resizeCanvasScrollArea(sfmlFrame, sfmlScrollArea, sfmlScrollAreaWidget);
     }
 
-    setCanvasScrollAreaLayout(sfmlScrollArea, sfmlScrollAreaWidget);
-    resizeCanvasScrollArea(sfmlFrame, sfmlScrollArea, sfmlScrollAreaWidget);
+
 }
 
 void MainWindow::sendTileInformation(const Tile& tile)

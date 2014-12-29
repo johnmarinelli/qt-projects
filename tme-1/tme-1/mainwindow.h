@@ -60,6 +60,7 @@ private:
 
     int mWindowWidth;
     int mWindowHeight;
+
 };
 
 #endif // MAINWINDOW_H
