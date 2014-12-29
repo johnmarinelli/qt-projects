@@ -66,7 +66,11 @@ public:
     void setTileDimensions(int tileWidth, int tileHeight);
     void setDimensions(int width, int height);
 
+    void saveMap();
+
     QSize sizeHint() const;
+
+    ~MyCanvas();
 
 signals:
     void clicked();

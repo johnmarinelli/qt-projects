@@ -41,12 +41,13 @@ private slots:
     void sendTraversableInformation(const QString& str);
     void setCurrentTileSheetIndex(int index);
     void showNewMapDialog();
-    void makeNewMap(std::tuple<int, int> params);
+    void makeNewMap(std::tuple<int, int, int, int> params);
+    void saveMap();
 
 private:
 
     void setTileSelectButtons();
-    void createNewCanvasArea(int width=0, int height=0);
+    void createNewCanvasArea(int width=0, int height=0, int tileWidth=0, int tileHeight=0);
 
     Ui::MainWindow *ui;
 

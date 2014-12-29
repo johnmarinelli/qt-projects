@@ -71,6 +71,11 @@ void TileMap::removeTile(const Tile *other)
     mTiles.erase(std::remove(mTiles.begin(), mTiles.end(), remove));
 }
 
+void TileMap::saveMap()
+{
+
+}
+
 void TileMap::reset()
 {
     mTileWidth = 0;

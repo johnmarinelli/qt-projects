@@ -72,7 +72,10 @@ void MyCanvas::onUpdate()
 
 void MyCanvas::setCurrentTile(const sf::Rect<int>& bounds, const std::shared_ptr<const TileSheet> tileSheet)
 {
-    mCurrentTileBounds = bounds;
+    mCurrentTileBounds.top = bounds.top;
+    mCurrentTileBounds.left = bounds.left;
+    mCurrentTileBounds.width = mTileMap.getTileWidth();
+    mCurrentTileBounds.height = mTileMap.getTileHeight();
     mTilesheet = tileSheet.get()->getSfTileSheet();
 }
 
@@ -104,6 +107,11 @@ void MyCanvas::setDimensions(int width, int height)
     mTileMap.setWidth(width);
     mTileMap.setHeight(height);
     this->resize(width, height);
+}
+
+void MyCanvas::saveMap()
+{
+    mTileMap.saveMap();
 }
 
 void MyCanvas::setCurrentTileSheetIndex(int index)
@@ -160,4 +168,9 @@ void MyCanvas::mousePressEvent(QMouseEvent* event)
 QSize MyCanvas::sizeHint() const
 {
     return QSize(mTileMap.getWidth(), mTileMap.getHeight());
+}
+
+MyCanvas::~MyCanvas()
+{
+    reset();
 }

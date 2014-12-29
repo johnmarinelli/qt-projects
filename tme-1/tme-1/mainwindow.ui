@@ -132,6 +132,8 @@
      <string>File</string>
     </property>
     <addaction name="newMapAction"/>
+    <addaction name="separator"/>
+    <addaction name="saveMapAction"/>
    </widget>
    <addaction name="menuTilemap_Editor_1"/>
    <addaction name="menuFile"/>
@@ -142,6 +144,14 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+N</string>
+   </property>
+  </action>
+  <action name="saveMapAction">
+   <property name="text">
+    <string>Save Map</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+S</string>
    </property>
   </action>
  </widget>

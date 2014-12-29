@@ -69,6 +69,5 @@ void Tile::setDimensions(const sf::Vector2i& dimensions)
 
 void Tile::setTraversable(bool traversable)
 {
-    std::cout << "Tile at " << std::to_string(mCoords.x) << ", " << std::to_string(mCoords.y) << " is " << traversable << std::endl;
     mTraversable = traversable;
 }

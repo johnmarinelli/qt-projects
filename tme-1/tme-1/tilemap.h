@@ -40,6 +40,8 @@ public:
     void addTile(const Tile& tile);
     void removeTile(const Tile* other);
 
+    void saveMap();
+
     void reset();
 };
 

@@ -14,6 +14,18 @@ void JPushButton::sendTileToDraw()
     emit clicked(mClipBounds, mTileSheetHandle);
 }
 
+void JPushButton::setClipSize(int width, int height)
+{
+    mClipBounds.width = width;
+    mClipBounds.height = height;
+}
+
+void JPushButton::setClipPosition(int top, int left)
+{
+    mClipBounds.top = top;
+    mClipBounds.left = left;
+}
+
 void JPushButton::setClipBounds(int top, int left, int width, int height)
 {
     mClipBounds.top = top;

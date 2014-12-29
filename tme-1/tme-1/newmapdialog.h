@@ -12,8 +12,10 @@ class NewMapDialog : public QDialog
 private:
     QLineEdit* mWidthInput;
     QLineEdit* mHeightInput;
+    QLineEdit* mTileWidthInput;
+    QLineEdit* mTileHeightInput;
 
-    int mWidth, mHeight;
+    int mWidth, mHeight, mTileWidth, mTileHeight;
 
     QPushButton* mConfirm;
 
@@ -23,7 +25,7 @@ public:
     explicit NewMapDialog(QWidget *parent = 0);
 
 signals:
-    void makeNew(std::tuple<int, int> package);
+    void makeNew(std::tuple<int, int, int, int> package);
 
 public slots:
 

@@ -20,6 +20,8 @@ public:
     explicit JPushButton(QWidget* parent, const TileSheetPtr tileSheetHandle);
 
     void setClipBounds(int top, int left, int width, int height);
+    void setClipSize(int width, int height);
+    void setClipPosition(int top, int left);
     sf::Rect<int> getClipBounds();
 
 signals:
