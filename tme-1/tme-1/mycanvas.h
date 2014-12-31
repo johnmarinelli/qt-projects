@@ -66,7 +66,7 @@ public:
     void setTileDimensions(int tileWidth, int tileHeight);
     void setDimensions(int width, int height);
 
-    void saveMap();
+    void saveMap(const QString& path);
 
     QSize sizeHint() const;
 

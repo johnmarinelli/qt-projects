@@ -1,4 +1,7 @@
 #include "tilemap.h"
+#include <QFile>
+#include <iostream>
+#include <QTextStream>
 
 TileMap::TileMap()
 {
@@ -71,9 +74,16 @@ void TileMap::removeTile(const Tile *other)
     mTiles.erase(std::remove(mTiles.begin(), mTiles.end(), remove));
 }
 
-void TileMap::saveMap()
+void TileMap::saveMap(const QString& path)
 {
+    QFile file(path);
+    if(!file.open(QIODevice::WriteOnly | QIODevice::Text )) {
+        std::cout << "Unable to open " << path.toStdString() << " for writing. " << std::endl;
+        return;
+    }
 
+    QTextStream output(&file);
+    output << "Sup" << "\n";
 }
 
 void TileMap::reset()

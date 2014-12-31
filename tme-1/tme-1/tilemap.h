@@ -3,6 +3,8 @@
 
 #include "tile.h"
 
+#include <QString>
+
 #include <iostream>
 #include <vector>
 #include <algorithm>
@@ -40,7 +42,7 @@ public:
     void addTile(const Tile& tile);
     void removeTile(const Tile* other);
 
-    void saveMap();
+    void saveMap(const QString& path);
 
     void reset();
 };

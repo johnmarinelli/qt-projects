@@ -109,9 +109,9 @@ void MyCanvas::setDimensions(int width, int height)
     this->resize(width, height);
 }
 
-void MyCanvas::saveMap()
+void MyCanvas::saveMap(const QString& path)
 {
-    mTileMap.saveMap();
+    mTileMap.saveMap(path);
 }
 
 void MyCanvas::setCurrentTileSheetIndex(int index)

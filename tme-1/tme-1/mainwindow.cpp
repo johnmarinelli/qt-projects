@@ -11,6 +11,7 @@
 #include <QDir>
 #include <QString>
 #include <QDirIterator>
+#include <QFileDialog>
 
 #include <iostream>
 #include <sstream>
@@ -279,7 +280,10 @@ void MainWindow::setCurrentTileFrameLayout()
 
 void MainWindow::saveMap()
 {
-    mSFMLView->saveMap();
+    /* open up a save file dialog */
+    QString path = QFileDialog::getSaveFileName(this, "Save File", QCoreApplication::applicationDirPath());
+
+    mSFMLView->saveMap(path);
 }
 
 void MainWindow::showNewMapDialog()
