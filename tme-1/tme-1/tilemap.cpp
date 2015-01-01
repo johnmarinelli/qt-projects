@@ -83,7 +83,9 @@ void TileMap::saveMap(const QString& path)
     }
 
     QTextStream output(&file);
-    output << "Sup" << "\n";
+
+    for(const auto& t : mTiles) {
+    }
 }
 
 void TileMap::reset()
