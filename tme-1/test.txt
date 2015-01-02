@@ -1,0 +1,9 @@
+{
+   "tiles" : [
+      {
+         "isTraversable" : true,
+         "tileSheetCoords" : [ 0, 33 ],
+         "worldCoords" : [ 64, 352 ]
+      }
+   ]
+}

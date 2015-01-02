@@ -1,4 +1,7 @@
 #include "tilemap.h"
+
+#include "json/json.h"
+
 #include <QFile>
 #include <iostream>
 #include <QTextStream>
@@ -84,8 +87,54 @@ void TileMap::saveMap(const QString& path)
 
     QTextStream output(&file);
 
+    /* root level for tile map */
+    Json::Value tileMapRoot;
+
+    /* nested value for tiles */
+    Json::Value tiles = Json::Value(Json::arrayValue);
+
     for(const auto& t : mTiles) {
+        /* create tile object */
+        Json::Value tile;
+
+        /* prepare raw values to be put in json format */
+        sf::Vector2i worldCoords = t->getCoords();
+        int x = worldCoords.x;
+        int y = worldCoords.y;
+
+        sf::Vector2i tileSheetCoords = t->getTileSheetCoords();
+        int sX = tileSheetCoords.x;
+        int sY = tileSheetCoords.y;
+
+        bool traversable = t->getTraversable();
+
+        Json::Value worldCoordsJSON = Json::Value(Json::arrayValue);
+        Json::Value tileSheetCoordsJSON = Json::Value(Json::arrayValue);
+        Json::Value traversableJSON = traversable;
+
+        /* fill up json values */
+        worldCoordsJSON.append(x);
+        worldCoordsJSON.append(y);
+
+        tileSheetCoordsJSON.append(sX);
+        tileSheetCoordsJSON.append(sY);
+
+        /* add JSON values to tile */
+        tile["worldCoords"] = worldCoordsJSON;
+        tile["tileSheetCoords"] = tileSheetCoordsJSON;
+        tile["isTraversable"] = traversableJSON;
+
+        /* add tile object to tiles array */
+        tiles.append(tile);
     }
+
+    tileMapRoot["tiles"] = tiles;
+
+    /* write to file */
+    Json::StyledWriter writer;
+    std::string JSONOutput = writer.write(tileMapRoot);
+
+    output << JSONOutput.c_str();
 }
 
 void TileMap::reset()

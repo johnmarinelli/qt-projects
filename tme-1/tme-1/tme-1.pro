@@ -27,7 +27,8 @@ SOURCES += main.cpp\
     tilesheethandler.cpp \
     newmapdialog.cpp \
     tilemap.cpp \
-    utility.cpp
+    utility.cpp \
+    jsoncpp.cpp
 
 HEADERS  += mainwindow.h \
     qsfmlcanvas.h \
@@ -40,7 +41,9 @@ HEADERS  += mainwindow.h \
     tilesheet.h \
     tilesheethandler.h \
     newmapdialog.h \
-    tilemap.h
+    tilemap.h \
+    json/json.h \
+    json/json-forwards.h
 
 FORMS    += \
     mainwindow.ui
