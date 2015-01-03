@@ -9,6 +9,7 @@ TileSheet::TileSheet() :
 }
 
 TileSheet::TileSheet(const QString& path, const QSize& tileSize) :
+    mPath(path.toStdString()),
     mQtTileSheet(path),
     mSize(0, 0),
     mTileSize(tileSize),
@@ -61,4 +62,9 @@ int TileSheet::getColumns() const
 int TileSheet::getRows() const
 {
     return mRows;
+}
+
+std::string TileSheet::getPath() const
+{
+    return mPath;
 }

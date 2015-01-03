@@ -1,6 +1,8 @@
 #ifndef TILE_H
 #define TILE_H
 
+#include "json/json.h"
+
 #include <SFML/Graphics.hpp>
 
 /*
@@ -38,11 +40,12 @@ public:
     bool getTraversable() const;
     unsigned short getTileSheetIndex() const;
 
+    Json::Value serialize() const;
+
     void setCoords(const sf::Vector2i& coords);
     void setTileSheetCoords(const sf::Vector2i& tileSheetCoords);
     void setDimensions(const sf::Vector2i& dimensions);
     void setTraversable(bool traversable);
-
 };
 
 #endif // TILE_H

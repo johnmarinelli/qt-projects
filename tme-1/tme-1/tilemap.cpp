@@ -5,6 +5,7 @@
 #include <QFile>
 #include <iostream>
 #include <QTextStream>
+#include <QFileInfo>
 
 TileMap::TileMap()
 {
@@ -77,7 +78,7 @@ void TileMap::removeTile(const Tile *other)
     mTiles.erase(std::remove(mTiles.begin(), mTiles.end(), remove));
 }
 
-void TileMap::saveMap(const QString& path)
+void TileMap::saveMap(const QString& path, const TileSheetHandler& tsh) const
 {
     QFile file(path);
     if(!file.open(QIODevice::WriteOnly | QIODevice::Text )) {
@@ -94,37 +95,19 @@ void TileMap::saveMap(const QString& path)
     Json::Value tiles = Json::Value(Json::arrayValue);
 
     for(const auto& t : mTiles) {
-        /* create tile object */
-        Json::Value tile;
+        Json::Value tile = t->serialize();
 
-        /* prepare raw values to be put in json format */
-        sf::Vector2i worldCoords = t->getCoords();
-        int x = worldCoords.x;
-        int y = worldCoords.y;
+        /* retrieve path of tile sheet for this tile */
+        std::string tileSheetPath = tsh.get(t->getTileSheetIndex())->getPath();
 
-        sf::Vector2i tileSheetCoords = t->getTileSheetCoords();
-        int sX = tileSheetCoords.x;
-        int sY = tileSheetCoords.y;
+        /* create a QFile for easier access to file name */
+        QFileInfo fileInfo(tileSheetPath.c_str());
+        tileSheetPath = fileInfo.fileName().toStdString();
 
-        bool traversable = t->getTraversable();
+        std::cout << tileSheetPath;
 
-        Json::Value worldCoordsJSON = Json::Value(Json::arrayValue);
-        Json::Value tileSheetCoordsJSON = Json::Value(Json::arrayValue);
-        Json::Value traversableJSON = traversable;
-
-        /* fill up json values */
-        worldCoordsJSON.append(x);
-        worldCoordsJSON.append(y);
-
-        tileSheetCoordsJSON.append(sX);
-        tileSheetCoordsJSON.append(sY);
-
-        /* add JSON values to tile */
-        tile["worldCoords"] = worldCoordsJSON;
-        tile["tileSheetCoords"] = tileSheetCoordsJSON;
-        tile["isTraversable"] = traversableJSON;
-
-        /* add tile object to tiles array */
+        /* store filename in tile json */
+        tile["tileSheetFile"] = tileSheetPath;
         tiles.append(tile);
     }
 

@@ -5,6 +5,7 @@ Tile::Tile()
     : mTileSheetIndex(0),
       mTraversable(true)
 {
+    std::cout << "Tile empty ctor" << std::endl;
 }
 
 Tile::Tile(const sf::Texture& tileSheet,
@@ -48,6 +49,30 @@ bool Tile::getTraversable() const
 unsigned short Tile::getTileSheetIndex() const
 {
     return mTileSheetIndex;
+}
+
+Json::Value Tile::serialize() const
+{
+    Json::Value tile;
+
+    /* prepare json values */
+    Json::Value worldCoordsJSON = Json::Value(Json::arrayValue);
+    Json::Value tileSheetCoordsJSON = Json::Value(Json::arrayValue);
+    Json::Value traversableJSON = mTraversable;
+
+    /* put raw values in json values */
+    worldCoordsJSON.append(mCoords.x);
+    worldCoordsJSON.append(mCoords.y);
+
+    tileSheetCoordsJSON.append(mTileSheetCoords.x);
+    tileSheetCoordsJSON.append(mTileSheetCoords.y);
+
+    /* add JSON values to tile */
+    tile["worldCoords"] = worldCoordsJSON;
+    tile["tileSheetCoords"] = tileSheetCoordsJSON;
+    tile["isTraversable"] = traversableJSON;
+
+    return tile;
 }
 
 void Tile::setCoords(const sf::Vector2i& coords)

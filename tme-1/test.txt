@@ -2,8 +2,15 @@
    "tiles" : [
       {
          "isTraversable" : true,
-         "tileSheetCoords" : [ 0, 33 ],
-         "worldCoords" : [ 64, 352 ]
+         "tileSheetCoords" : [ 33, 66 ],
+         "tileSheetFile" : "tiles.png",
+         "worldCoords" : [ 352, 416 ]
+      },
+      {
+         "isTraversable" : true,
+         "tileSheetCoords" : [ 462, 0 ],
+         "tileSheetFile" : "tiles2.png",
+         "worldCoords" : [ 128, 416 ]
       }
    ]
 }

@@ -2,6 +2,7 @@
 #define TILEMAP_H
 
 #include "tile.h"
+#include "tilesheethandler.h"
 
 #include <QString>
 
@@ -42,7 +43,7 @@ public:
     void addTile(const Tile& tile);
     void removeTile(const Tile* other);
 
-    void saveMap(const QString& path);
+    void saveMap(const QString& path, const TileSheetHandler& tsh) const;
 
     void reset();
 };

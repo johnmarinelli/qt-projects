@@ -111,7 +111,7 @@ void MyCanvas::setDimensions(int width, int height)
 
 void MyCanvas::saveMap(const QString& path)
 {
-    mTileMap.saveMap(path);
+    mTileMap.saveMap(path, mTileSheetHandler);
 }
 
 void MyCanvas::setCurrentTileSheetIndex(int index)
@@ -148,6 +148,7 @@ void MyCanvas::mousePressEvent(QMouseEvent* event)
         tile.setTileSheetCoords(sf::Vector2i(mCurrentTileBounds.left, mCurrentTileBounds.top));
         tile.setDimensions(sf::Vector2i(tileWidth, tileHeight));
 
+        std::cout << "assignment operator" << std::endl;
         mTiles[coords] = tile;
         mSelectedTile = &(mTiles[coords]);
         mTileMap.addTile(mTiles[coords]);

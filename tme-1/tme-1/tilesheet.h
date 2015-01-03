@@ -10,14 +10,16 @@
 class TileSheet
 {
 private:
-   QPixmap mQtTileSheet;
-   sf::Texture mSfTileSheet;
+    std::string mPath;
 
-   QSize mSize;
-   QSize mTileSize;
+    QPixmap mQtTileSheet;
+    sf::Texture mSfTileSheet;
 
-   int mRows;
-   int mColumns;
+    QSize mSize;
+    QSize mTileSize;
+
+    int mRows;
+    int mColumns;
 
 public:
     TileSheet();
@@ -31,6 +33,8 @@ public:
     const sf::Texture& getSfTileSheet() const;
     int getRows() const;
     int getColumns() const;
+
+    std::string getPath() const;
 
     /*
      * Sets size, rows, and columns from tilesheet
